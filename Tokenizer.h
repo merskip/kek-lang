@@ -12,11 +12,11 @@
 class Tokenizer {
 
 private:
-    std::string text;
+    const std::string &text;
     long currentOffset = -1;
 
 public:
-    explicit Tokenizer(std::string &text)
+    explicit Tokenizer(const std::string &text)
             : text(text) {
     }
 

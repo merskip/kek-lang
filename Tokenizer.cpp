@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 #include "Tokenizer.h"
+#include "ParsingException.h"
 
 std::list<Token> Tokenizer::getTokens() {
     std::list<Token> tokens;
@@ -61,7 +62,7 @@ Token Tokenizer::getNextToken() {
         std::string tempText(1, currentChar);
         return createToken(tempText, Token::Type::eof);
     } else {
-        throw std::invalid_argument("Unexpected " + std::string(1, currentChar));
+        throw ParsingException(currentOffset, "Unexpected " + std::string(1, currentChar));
     }
 }
 
