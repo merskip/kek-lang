@@ -27,5 +27,5 @@ public:
 private:
     Token createToken(std::string &tokenText, Token::Type type, double numberValue = NAN);
 
-    char getNextChar();
+    char getNextCharOrEOF();
 };

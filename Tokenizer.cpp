@@ -18,18 +18,18 @@ std::list<Token> Tokenizer::getTokens() {
 }
 
 Token Tokenizer::getNextToken() {
-    char currentChar = getNextChar();
+    char currentChar = getNextCharOrEOF();
 
     // Skip whitespaces
     while (isspace(currentChar))
-        currentChar = getNextChar();
+        currentChar = getNextCharOrEOF();
 
     if (isalpha(currentChar)) { // [a-Z][a-Z0-9]*
         std::string identifierText;
 
         do {
             identifierText += currentChar;
-        } while (isalnum(currentChar = getNextChar()));
+        } while (isalnum(currentChar = getNextCharOrEOF()));
 
         if (identifierText == "func") {
             return createToken(identifierText, Token::Type::func);
@@ -48,16 +48,16 @@ Token Tokenizer::getNextToken() {
                 visitedSeparator = true;
             }
 
-        } while (isdigit(currentChar = getNextChar()) || currentChar == '.');
+        } while (isdigit(currentChar = getNextCharOrEOF()) || currentChar == '.');
 
         return createToken(numberText, Token::Type::number, std::stod(numberText));
     } else if (currentChar == '#') {
         do {
-            currentChar = getNextChar();
+            currentChar = getNextCharOrEOF();
         } while (currentChar != EOF && currentChar != '\r' && currentChar != '\n');
 
         return getNextToken();
-    } else if (currentChar == EOF || currentChar == '\0' || currentChar == '\177') {
+    } else if (currentChar == EOF) {
         std::string tempText(1, currentChar);
         return createToken(tempText, Token::Type::eof);
     } else {
@@ -74,7 +74,10 @@ Token Tokenizer::createToken(std::string &tokenText, Token::Type type, double nu
     };
 }
 
-char Tokenizer::getNextChar() {
+char Tokenizer::getNextCharOrEOF() {
     currentOffset++;
-    return this->text[currentOffset];
+    if (currentOffset < this->text.size())
+        return this->text[currentOffset];
+    else
+        return EOF;
 }
