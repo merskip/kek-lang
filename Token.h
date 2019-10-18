@@ -19,10 +19,25 @@ struct Token {
     double numberValue;
 
     friend std::ostream &operator<<(std::ostream &os, const Token &token) {
-        os << "text: \"" << token.text << "\""
-           << ", offset: " << token.offset
-           << ", type: " << token.type
-           << ", numberValue: " << token.numberValue;
+        if (token.type != Type::eof)
+            os << "text: \"" << token.text << "\", ";
+        os << "offset: " << token.offset
+           << ", type: " << toString(token.type);
+        if (token.type == Type::number)
+            os << ", numberValue: " << token.numberValue;
         return os;
+    }
+
+    inline static std::string toString(Type type) {
+        switch (type) {
+            case eof:
+                return "eof";
+            case func:
+                return "func";
+            case identifier:
+                return "identifier";
+            case number:
+                return "number";
+        }
     }
 };
