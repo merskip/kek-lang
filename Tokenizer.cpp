@@ -70,7 +70,7 @@ Token Tokenizer::createToken(std::string &tokenText, Token::Type type, double nu
             .text = tokenText,
             .offset = currentOffset - (long) tokenText.size(),
             .type = type,
-            numberValue = numberValue
+            .numberValue = numberValue
     };
 }
 
