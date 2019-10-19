@@ -11,6 +11,19 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
-add_executable(kek_lang main.cpp Tokenizer.cpp Console.cpp)
+add_executable(
+        kek_lang
+        main.cpp
+        Tokenizer.cpp
+        Console.cpp
+        NodeAST/NodeAST.h
+        NodeAST/NumberNodeAST.h
+        NodeAST/NumberNodeAST.h
+        NodeAST/ReferenceNodeAST.h
+        NodeAST/BinaryOperatorNodeAST.h
+        NodeAST/CallNodeAST.h
+        NodeAST/FunctionPrototypeNodeAST.h
+        NodeAST/FunctionDefinitionNodeAST.h
+)
 
 target_link_libraries(kek_lang LLVM)
