@@ -15,13 +15,14 @@ class NodeASTPrinter {
 
 private:
     int indent = 0;
+    bool skipNextIndent = false;
     std::stringstream output;
 
 public:
 
     void print(const std::string &tag, const std::map<std::string, std::string> &attributes = {});
 
-    void printChildNode(const NodeAST &node, const std::string &tag,
+    void printChildNode(const NodeAST &node, const std::string &tag = "",
                         const std::map<std::string, std::string> &attributes = {});
 
     std::string getOutput();

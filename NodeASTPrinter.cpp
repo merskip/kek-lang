@@ -17,10 +17,15 @@ void NodeASTPrinter::printChildNode(const NodeAST &node, const std::string &tag,
                                     const std::map<std::string, std::string> &attributes) {
     static const std::string childIndent = " - ";
 
-    output << getIndent() << childIndent << getChildTagString(tag);
+    output << getIndent() << childIndent;
+    if (!tag.empty())
+        output << getChildTagString(tag);
     if (!attributes.empty())
         output << " " << getAttributesString(attributes);
-    output << std::endl;
+    if (!tag.empty() || !attributes.empty())
+        output << std::endl;
+    else
+        skipNextIndent = true;
 
     indent += childIndent.size();
     node.print(*this);
@@ -28,6 +33,10 @@ void NodeASTPrinter::printChildNode(const NodeAST &node, const std::string &tag,
 }
 
 std::string NodeASTPrinter::getIndent() {
+    if (skipNextIndent) {
+        skipNextIndent = false;
+        return "";
+    }
     return std::string(indent, ' ');
 }
 

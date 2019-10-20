@@ -12,6 +12,7 @@
 #include "NodeAST/NumberNodeAST.h"
 #include "NodeAST/ReferenceNodeAST.h"
 #include "NodeAST/CallNodeAST.h"
+#include "NodeAST/FunctionDefinitionNodeAST.h"
 
 class NodeASTParser {
 
@@ -40,6 +41,10 @@ private:
     std::unique_ptr<ReferenceNodeAST> parseReference();
 
     std::unique_ptr<CallNodeAST> parseCall();
+
+    std::unique_ptr<FunctionDefinitionNodeAST> parseFunctionDefinition();
+
+    std::unique_ptr<FunctionPrototypeNodeAST> parseFunctionPrototype();
 
     void moveToNextToken();
 

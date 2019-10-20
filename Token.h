@@ -17,7 +17,10 @@ struct Token {
         number,
         leftParenthesis,
         rightParenthesis,
-        comma
+        leftBracket,
+        rightBracket,
+        comma,
+        semicolon
     } type;
     double numberValue;
 
@@ -45,8 +48,14 @@ struct Token {
                 return "leftParenthesis";
             case rightParenthesis:
                 return "rightParenthesis";
+            case leftBracket:
+                return "leftBracket";
+            case rightBracket:
+                return "rightBracket";
             case comma:
                 return "comma";
+            case semicolon:
+                return "semicolon";
         }
     }
 };

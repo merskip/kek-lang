@@ -65,8 +65,14 @@ Token Tokenizer::getNextToken() {
         return createToken(currentCharStr, Token::Type::leftParenthesis);
     } else if (currentChar == ')') {
         return createToken(currentCharStr, Token::Type::rightParenthesis);
+    } else if (currentChar == '{') {
+        return createToken(currentCharStr, Token::Type::leftBracket);
+    } else if (currentChar == '}') {
+        return createToken(currentCharStr, Token::Type::rightBracket);
     } else if (currentChar == ',') {
         return createToken(currentCharStr, Token::Type::comma);
+    } else if (currentChar == ';') {
+        return createToken(currentCharStr, Token::Type::semicolon);
     } else if (currentChar == EOF) {
         return createToken(currentCharStr, Token::Type::eof);
     } else {

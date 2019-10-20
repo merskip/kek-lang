@@ -5,18 +5,17 @@
 #pragma once
 
 
-#include <utility>
-#include <vector>
 #include <memory>
+#include <utility>
 #include "NodeAST.h"
 
-class FileNodeAST : public NodeAST {
+class FunctionBodyNodeAST : public NodeAST {
 
 private:
     std::vector<std::unique_ptr<NodeAST>> nodes;
 
 public:
-    explicit FileNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
+    explicit FunctionBodyNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
             : nodes(std::move(nodes)) {
     }
 
@@ -25,7 +24,7 @@ public:
     }
 
     void print(NodeASTPrinter &printer) const override {
-        printer.print("FileNodeAST");
+        printer.print("FunctionBodyNodeAST");
         for (auto &node : nodes) {
             printer.printChildNode(*node);
         }
