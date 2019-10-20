@@ -4,6 +4,12 @@
 
 #pragma once
 
+#include <ostream>
+#include "../NodeASTPrinter.h"
+
+
 class NodeAST {
 
+public:
+    virtual void print(NodeASTPrinter &printer) const = 0;
 };

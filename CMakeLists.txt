@@ -24,6 +24,10 @@ add_executable(
         NodeAST/CallNodeAST.h
         NodeAST/FunctionPrototypeNodeAST.h
         NodeAST/FunctionDefinitionNodeAST.h
-)
+        NodeAST/FileNodeAST.h
+        NodeASTParser.cpp
+        NodeASTParser.h
+        NodeASTPrinter.h
+        NodeASTPrinter.cpp)
 
 target_link_libraries(kek_lang LLVM)

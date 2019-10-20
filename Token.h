@@ -14,7 +14,10 @@ struct Token {
         eof,
         func,
         identifier,
-        number
+        number,
+        leftParenthesis,
+        rightParenthesis,
+        comma
     } type;
     double numberValue;
 
@@ -38,6 +41,12 @@ struct Token {
                 return "identifier";
             case number:
                 return "number";
+            case leftParenthesis:
+                return "leftParenthesis";
+            case rightParenthesis:
+                return "rightParenthesis";
+            case comma:
+                return "comma";
         }
     }
 };

@@ -2,6 +2,7 @@
 #include "Tokenizer.h"
 #include "ParsingException.h"
 #include "Console.h"
+#include "NodeASTParser.h"
 
 int main() {
 
@@ -11,8 +12,16 @@ int main() {
             Tokenizer tokenizer(inputText);
             auto tokens = tokenizer.getTokens();
             for (const auto &token : tokens) {
+                console.printMarker(token.offset, token.text.size());
                 std::cout << "Token { " << token << " }" << std::endl;
             }
+
+            NodeASTParser parser(tokens);
+            auto rootNode = parser.parse();
+
+            NodeASTPrinter printer;
+            rootNode->print(printer);
+            std::cout << printer.getOutput() << std::endl;
         }
         catch (ParsingException &e) {
             console.printMarker(e.getOffset());

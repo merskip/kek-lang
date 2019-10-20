@@ -28,4 +28,6 @@ private:
     Token createToken(std::string &tokenText, Token::Type type, double numberValue = NAN);
 
     char getNextCharOrEOF();
+
+    void backToPreviousChar();
 };

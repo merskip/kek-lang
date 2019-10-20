@@ -19,10 +19,10 @@ void Console::begin(const std::function<void(const std::string &inputText)> &onI
     }
 }
 
-void Console::printMarker(long offset, char marker, long markerSize) {
+void Console::printMarker(long offset, long markerSize) {
     auto offsetWithPrompt = offset + prompt.size();
     auto padding = std::string(offsetWithPrompt, ' ');
-    std::cout << padding << std::string(markerSize, marker) << std::endl;
+    std::cout << padding << std::string(markerSize, '^') << ' ';
 }
 
 void Console::printMessage(const std::string &message) {

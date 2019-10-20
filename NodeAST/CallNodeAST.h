@@ -18,7 +18,7 @@ private:
 
 public:
     CallNodeAST(std::string &callee, std::vector<std::unique_ptr<NodeAST>> &arguments)
-            : callee(callee), arguments(arguments) {
+            : callee(callee), arguments(std::move(arguments)) {
     }
 
     [[nodiscard]] const std::string &getCallee() const {
@@ -27,6 +27,15 @@ public:
 
     [[nodiscard]] const std::vector<std::unique_ptr<NodeAST>> &getArguments() const {
         return arguments;
+    }
+
+    void print(NodeASTPrinter &printer) const override {
+        printer.print("CallNodeAST", {
+                {"callee", callee},
+        });
+        for (auto &argument : arguments) {
+            printer.printChildNode(*argument, "Argument");
+        }
     }
 };
 

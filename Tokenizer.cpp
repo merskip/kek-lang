@@ -20,6 +20,7 @@ std::list<Token> Tokenizer::getTokens() {
 
 Token Tokenizer::getNextToken() {
     char currentChar = getNextCharOrEOF();
+    std::string currentCharStr(1, currentChar);
 
     // Skip whitespaces
     while (isspace(currentChar))
@@ -31,6 +32,7 @@ Token Tokenizer::getNextToken() {
         do {
             identifierText += currentChar;
         } while (isalnum(currentChar = getNextCharOrEOF()));
+        backToPreviousChar();
 
         if (identifierText == "func") {
             return createToken(identifierText, Token::Type::func);
@@ -50,6 +52,7 @@ Token Tokenizer::getNextToken() {
             }
 
         } while (isdigit(currentChar = getNextCharOrEOF()) || currentChar == '.');
+        backToPreviousChar();
 
         return createToken(numberText, Token::Type::number, std::stod(numberText));
     } else if (currentChar == '#') {
@@ -58,9 +61,14 @@ Token Tokenizer::getNextToken() {
         } while (currentChar != EOF && currentChar != '\r' && currentChar != '\n');
 
         return getNextToken();
+    } else if (currentChar == '(') {
+        return createToken(currentCharStr, Token::Type::leftParenthesis);
+    } else if (currentChar == ')') {
+        return createToken(currentCharStr, Token::Type::rightParenthesis);
+    } else if (currentChar == ',') {
+        return createToken(currentCharStr, Token::Type::comma);
     } else if (currentChar == EOF) {
-        std::string tempText(1, currentChar);
-        return createToken(tempText, Token::Type::eof);
+        return createToken(currentCharStr, Token::Type::eof);
     } else {
         throw ParsingException(currentOffset, "Unexpected " + std::string(1, currentChar));
     }
@@ -69,7 +77,7 @@ Token Tokenizer::getNextToken() {
 Token Tokenizer::createToken(std::string &tokenText, Token::Type type, double numberValue) {
     return Token{
             .text = tokenText,
-            .offset = currentOffset - (long) tokenText.size(),
+            .offset = currentOffset - (long) tokenText.size() + 1,
             .type = type,
             .numberValue = numberValue
     };
@@ -81,4 +89,8 @@ char Tokenizer::getNextCharOrEOF() {
         return this->text[currentOffset];
     else
         return EOF;
+}
+
+void Tokenizer::backToPreviousChar() {
+    currentOffset--;
 }

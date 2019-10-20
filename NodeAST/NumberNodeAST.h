@@ -6,7 +6,7 @@
 
 #include "NodeAST.h"
 
-class NumberNodeAST: public NodeAST {
+class NumberNodeAST : public NodeAST {
 
 private:
     double number;
@@ -16,5 +16,11 @@ public:
 
     [[nodiscard]] double getNumber() const {
         return number;
+    }
+
+    void print(NodeASTPrinter &printer) const override {
+        printer.print("NumberNodeAST", {
+                {"value", std::to_string(number)}
+        });
     }
 };

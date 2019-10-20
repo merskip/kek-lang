@@ -8,5 +8,21 @@
 
 class ReferenceNodeAST: public NodeAST {
 
+private:
+    std::string name;
+
+public:
+    explicit ReferenceNodeAST(std::string &name) : name(name) {
+    }
+
+    [[nodiscard]] const std::string &getName() const {
+        return name;
+    }
+
+    void print(NodeASTPrinter &printer) const override {
+        printer.print("ReferenceNodeAST", {
+                {"name", name}
+        });
+    }
 };
 

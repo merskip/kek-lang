@@ -20,7 +20,7 @@ public:
 
     void begin(const std::function<void(const std::string &inputText)> &onInputText);
 
-    void printMarker(long offset, char marker = '^', long markerSize = 1);
+    void printMarker(long offset, long markerSize = 1);
 
     static void printMessage(const std::string &message);
 
