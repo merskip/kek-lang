@@ -13,6 +13,7 @@
 #include "NodeAST/ReferenceNodeAST.h"
 #include "NodeAST/CallNodeAST.h"
 #include "NodeAST/FunctionDefinitionNodeAST.h"
+#include "NodeAST/FileNodeAST.h"
 
 class NodeASTParser {
 
@@ -26,7 +27,7 @@ public:
             : tokens(tokens), currentToken(*tokens.begin()) {
     }
 
-    std::unique_ptr<NodeAST> parse();
+    std::unique_ptr<FileNodeAST> parse();
 
 private:
 

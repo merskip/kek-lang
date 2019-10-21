@@ -23,6 +23,14 @@ public:
         return nodes;
     }
 
+    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+        llvm::Value *lastCode = nullptr;
+        for (auto &node : nodes) {
+            lastCode = node->generateCode(context, module, builder);
+        }
+        return lastCode;
+    }
+
     void print(NodeASTPrinter &printer) const override {
         printer.print("FunctionBodyNodeAST");
         for (auto &node : nodes) {

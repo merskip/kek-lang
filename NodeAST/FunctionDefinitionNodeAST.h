@@ -6,6 +6,7 @@
 
 
 #include <memory>
+#include <llvm/IR/BasicBlock.h>
 #include "NodeAST.h"
 #include "FunctionPrototypeNodeAST.h"
 #include "FunctionBodyNodeAST.h"
@@ -28,6 +29,20 @@ public:
 
     [[nodiscard]] const std::unique_ptr<FunctionBodyNodeAST> &getBody() const {
         return body;
+    }
+
+    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+        llvm::Function *function = module->getFunction(prototype->getName());
+        if (function)
+            throw "Function " + prototype->getName() + " cannot be redefined";
+        function = prototype->generateFunction(context, module, builder);
+
+        llvm::BasicBlock *implBlock = llvm::BasicBlock::Create(*context, "implementation", function);
+        builder->SetInsertPoint(implBlock);
+
+        llvm::Value *returnValue = body->generateCode(context, module, builder);
+        builder->CreateRet(returnValue);
+        return function;
     }
 
     void print(NodeASTPrinter &printer) const override {

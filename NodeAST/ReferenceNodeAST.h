@@ -19,6 +19,10 @@ public:
         return name;
     }
 
+    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+        return nullptr;
+    }
+
     void print(NodeASTPrinter &printer) const override {
         printer.print("ReferenceNodeAST", {
                 {"name", name}

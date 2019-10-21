@@ -9,7 +9,7 @@
 
 #include <memory>
 
-std::unique_ptr<NodeAST> NodeASTParser::parse() {
+std::unique_ptr<FileNodeAST> NodeASTParser::parse() {
     std::vector<std::unique_ptr<NodeAST>> nodes;
     do {
         moveToNextToken();

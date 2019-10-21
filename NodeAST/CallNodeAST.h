@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <llvm/IR/IRBuilder.h>
 #include "NodeAST.h"
 
 class CallNodeAST : public NodeAST {
@@ -27,6 +28,25 @@ public:
 
     [[nodiscard]] const std::vector<std::unique_ptr<NodeAST>> &getArguments() const {
         return arguments;
+    }
+
+    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+        llvm::Function *function = module->getFunction(callee);
+        if (function == nullptr)
+            throw "Unknown function: " + callee;
+
+        if (function->arg_size() != arguments.size())
+            throw "Expected " + std::to_string(function->arg_size())
+                  + " arguments but got " + std::to_string(arguments.size());
+
+        std::vector<llvm::Value *> argumentsValues;
+        for (auto &argument: arguments) {
+            auto *argumentCode = argument->generateCode(context, module, builder);
+            if (!argumentCode)
+                throw "Failed compile argument";
+            argumentsValues.push_back(argumentCode);
+        }
+        return builder->CreateCall(function, argumentsValues, "call");
     }
 
     void print(NodeASTPrinter &printer) const override {

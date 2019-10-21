@@ -24,6 +24,12 @@ public:
         return nodes;
     }
 
+    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+        for (auto &node : nodes) {
+            auto *code = node->generateCode(context, module, builder);
+        }
+    }
+
     void print(NodeASTPrinter &printer) const override {
         printer.print("FileNodeAST");
         for (auto &node : nodes) {
