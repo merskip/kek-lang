@@ -24,6 +24,8 @@ std::unique_ptr<NodeAST> NodeASTParser::parseToken() {
     switch (currentToken.type) {
         case Token::eof:
             return nullptr;
+        case Token::leftParenthesis:
+            return parseParentheses();
         case Token::identifier:
             return parseReferenceOrCall();
         case Token::number:
@@ -33,6 +35,19 @@ std::unique_ptr<NodeAST> NodeASTParser::parseToken() {
         default:
             throw ParsingException(currentOffset, "Unexpected token");
     }
+}
+
+std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
+    moveToNextToken(); // Consume (
+    auto token = parseToken();
+    if (!token)
+        return nullptr;
+
+    moveToNextToken();
+    if (currentToken.type != Token::Type::rightParenthesis)
+        throw ParsingException(currentOffset, "expected ')'");
+
+    return token;
 }
 
 std::unique_ptr<NumberNodeAST> NodeASTParser::parseNumber() {

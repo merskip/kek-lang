@@ -33,6 +33,8 @@ private:
 
     std::unique_ptr<NodeAST> parseToken();
 
+    std::unique_ptr<NodeAST> parseParentheses();
+
     std::unique_ptr<NumberNodeAST> parseNumber();
 
     std::unique_ptr<NodeAST> parseReferenceOrCall();
