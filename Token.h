@@ -11,16 +11,17 @@ struct Token {
     std::string text;
     long offset;
     enum Type {
-        eof,
-        func,
-        identifier,
-        number,
-        leftParenthesis,
-        rightParenthesis,
-        leftBracket,
-        rightBracket,
-        comma,
-        semicolon
+        Eof,
+        Func,
+        Identifier,
+        Number,
+        Operator,
+        LeftParenthesis,
+        RightParenthesis,
+        LeftBracket,
+        RightBracket,
+        Comma,
+        Semicolon
     } type;
     double numberValue;
 
@@ -35,27 +36,19 @@ struct Token {
     }
 
     inline static std::string toString(Type type) {
+#define returnStr(type) case type: return #type;
         switch (type) {
-            case eof:
-                return "eof";
-            case func:
-                return "func";
-            case identifier:
-                return "identifier";
-            case number:
-                return "number";
-            case leftParenthesis:
-                return "leftParenthesis";
-            case rightParenthesis:
-                return "rightParenthesis";
-            case leftBracket:
-                return "leftBracket";
-            case rightBracket:
-                return "rightBracket";
-            case comma:
-                return "comma";
-            case semicolon:
-                return "semicolon";
+            returnStr(eof)
+            returnStr(func)
+            returnStr(identifier)
+            returnStr(number)
+            returnStr(binaryOperator)
+            returnStr(leftParenthesis)
+            returnStr(rightParenthesis)
+            returnStr(leftBracket)
+            returnStr(rightBracket)
+            returnStr(comma)
+            returnStr(semicolon)
         }
     }
 };

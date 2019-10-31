@@ -2,7 +2,7 @@
 // Created by Piotr Merski on 18.10.2019.
 //
 
-#include <stdexcept>
+#include <algorithm>
 #include "Tokenizer.h"
 #include "ParsingException.h"
 
@@ -73,6 +73,8 @@ Token Tokenizer::getNextToken() {
         return createToken(currentCharStr, Token::Type::comma);
     } else if (currentChar == ';') {
         return createToken(currentCharStr, Token::Type::semicolon);
+    } else if (containsOperator(currentChar)) {
+        return createToken(currentCharStr, Token::Type::binaryOperator);
     } else if (currentChar == EOF) {
         return createToken(currentCharStr, Token::Type::eof);
     } else {
@@ -99,4 +101,8 @@ char Tokenizer::getNextCharOrEOF() {
 
 void Tokenizer::backToPreviousChar() {
     currentOffset--;
+}
+
+bool Tokenizer::containsOperator(char op) {
+    return std::find(operators.begin(), operators.end(), op) != operators.end();
 }

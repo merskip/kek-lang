@@ -7,6 +7,7 @@
 #include <string>
 #include <cmath>
 #include <list>
+#include <vector>
 #include "Token.h"
 
 class Tokenizer {
@@ -14,11 +15,18 @@ class Tokenizer {
 private:
     const std::string &text;
     long currentOffset = -1;
+    std::vector<char> operators;
 
 public:
     explicit Tokenizer(const std::string &text)
             : text(text) {
     }
+
+    void appendOperator(char op) {
+        operators.push_back(op);
+    }
+
+
 
     std::list<Token> getTokens();
 
@@ -30,4 +38,6 @@ private:
     char getNextCharOrEOF();
 
     void backToPreviousChar();
+
+    bool containsOperator(char op);
 };
