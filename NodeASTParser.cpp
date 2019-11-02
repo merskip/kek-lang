@@ -10,19 +10,24 @@
 #include <memory>
 
 std::unique_ptr<FileNodeAST> NodeASTParser::parse() {
-    std::vector<std::unique_ptr<NodeAST>> nodes;
+    parsedNodes.clear();
     do {
         moveToNextToken();
         auto parsedToken = parseToken();
         if (parsedToken)
-            nodes.push_back(std::move(parsedToken));
+            parsedNodes.push_back(std::move(parsedToken));
     } while (existsNextToken());
-    return std::make_unique<FileNodeAST>(FileNodeAST(nodes));
+    return std::make_unique<FileNodeAST>(FileNodeAST(parsedNodes));
 }
 
-std::unique_ptr<NodeAST> NodeASTParser::parseToken() {
+std::unique_ptr<NodeAST> NodeASTParser::parseToken(int minPrecedence) {
     auto parsedNode = parseCurrentToken();
-    if (moveToNextTokenIfIsTypeOf(Token::Operator)) {
+    if (moveToNextIf([&](Token &nextToken) {
+        if (nextToken.type != Token::Operator)
+            return false;
+        auto precedence = operatorsPrecedence[nextToken.text];
+        return precedence > minPrecedence;
+    })) {
         return parseOperator(std::move(parsedNode));
     }
     return parsedNode;
@@ -40,6 +45,11 @@ std::unique_ptr<NodeAST> NodeASTParser::parseCurrentToken() {
             return parseNumber();
         case Token::Func:
             return parseFunctionDefinition();
+        case Token::Operator: {
+            auto lhs = std::move(parsedNodes.back());
+            parsedNodes.pop_back();
+            return parseOperator(std::move(lhs));
+        }
         default:
             throw ParsingException(currentOffset, "Unexpected token");
     }
@@ -47,9 +57,10 @@ std::unique_ptr<NodeAST> NodeASTParser::parseCurrentToken() {
 
 std::unique_ptr<BinaryOperatorNodeAST> NodeASTParser::parseOperator(std::unique_ptr<NodeAST> lhs) {
     auto operatorText = currentToken.text;
+    auto precedence = operatorsPrecedence[operatorText];
 
     moveToNextToken();
-    auto rhs = parseToken();
+    auto rhs = parseToken(precedence);
     return std::make_unique<BinaryOperatorNodeAST>(BinaryOperatorNodeAST(operatorText, lhs, rhs));;
 }
 
@@ -168,13 +179,15 @@ std::unique_ptr<FunctionPrototypeNodeAST> NodeASTParser::parseFunctionPrototype(
     return std::make_unique<FunctionPrototypeNodeAST>(FunctionPrototypeNodeAST(name, arguments));
 }
 
-bool NodeASTParser::moveToNextTokenIfIsTypeOf(Token::Type tokenType) {
-    if (existsNextToken() && getNextToken().type == tokenType) {
-        moveToNextToken();
-        return true;
-    } else {
-        return false;
+bool NodeASTParser::moveToNextIf(const std::function<bool(Token &)> &predicate) {
+    if (existsNextToken()) {
+        auto nextToken = getNextToken();
+        if (predicate(nextToken)) {
+            moveToNextToken();
+            return true;
+        }
     }
+    return false;
 }
 
 void NodeASTParser::moveToNextToken() {

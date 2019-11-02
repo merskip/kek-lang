@@ -7,6 +7,7 @@
 
 #include <list>
 #include <memory>
+#include <functional>
 #include "Token.h"
 #include "NodeAST/NodeAST.h"
 #include "NodeAST/NumberNodeAST.h"
@@ -22,6 +23,8 @@ private:
     std::list<Token> tokens;
     long currentOffset = -1;
     Token &currentToken;
+    std::vector<std::unique_ptr<NodeAST>> parsedNodes;
+
     std::map<std::string, int> operatorsPrecedence;
 
 public:
@@ -41,7 +44,7 @@ public:
 
 private:
 
-    std::unique_ptr<NodeAST> parseToken();
+    std::unique_ptr<NodeAST> parseToken(int minPrecedence = 0);
 
     std::unique_ptr<NodeAST> parseCurrentToken();
 
@@ -63,7 +66,7 @@ private:
 
     std::unique_ptr<FunctionPrototypeNodeAST> parseFunctionPrototype();
 
-    bool moveToNextTokenIfIsTypeOf(Token::Type tokenType);
+    bool moveToNextIf(const std::function<bool(Token &)> &predicate);
 
     void moveToNextToken();
 
