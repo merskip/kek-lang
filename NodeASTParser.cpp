@@ -22,15 +22,15 @@ std::unique_ptr<FileNodeAST> NodeASTParser::parse() {
 
 std::unique_ptr<NodeAST> NodeASTParser::parseToken() {
     switch (currentToken.type) {
-        case Token::eof:
+        case Token::Eof:
             return nullptr;
-        case Token::leftParenthesis:
+        case Token::LeftParenthesis:
             return parseParentheses();
-        case Token::identifier:
+        case Token::Identifier:
             return parseReferenceOrCall();
-        case Token::number:
+        case Token::Number:
             return parseNumber();
-        case Token::func:
+        case Token::Func:
             return parseFunctionDefinition();
         default:
             throw ParsingException(currentOffset, "Unexpected token");
@@ -44,7 +44,7 @@ std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
         return nullptr;
 
     moveToNextToken();
-    if (currentToken.type != Token::Type::rightParenthesis)
+    if (currentToken.type != Token::Type::RightParenthesis)
         throw ParsingException(currentOffset, "expected ')'");
 
     return token;
@@ -63,7 +63,7 @@ std::unique_ptr<NodeAST> NodeASTParser::parseReferenceOrCall() {
 }
 
 bool NodeASTParser::isCallNode() {
-    return existsNextToken() && getNextToken().type == Token::Type::leftParenthesis;
+    return existsNextToken() && getNextToken().type == Token::Type::LeftParenthesis;
 }
 
 std::unique_ptr<ReferenceNodeAST> NodeASTParser::parseReference() {
@@ -77,16 +77,16 @@ std::unique_ptr<CallNodeAST> NodeASTParser::parseCall() {
     std::vector<std::unique_ptr<NodeAST>> arguments;
     while (true) {
         moveToNextToken();
-        if (currentToken.type == Token::Type::rightParenthesis)
+        if (currentToken.type == Token::Type::RightParenthesis)
             break;
 
         auto argumentNode = parseToken();
         arguments.push_back(std::move(argumentNode));
 
         moveToNextToken();
-        if (currentToken.type == Token::Type::rightParenthesis)
+        if (currentToken.type == Token::Type::RightParenthesis)
             break;
-        if (currentToken.type != Token::Type::comma)
+        if (currentToken.type != Token::Type::Comma)
             throw ParsingException(currentOffset, "Expected , or )");
     }
 
@@ -97,22 +97,22 @@ std::unique_ptr<FunctionDefinitionNodeAST> NodeASTParser::parseFunctionDefinitio
     auto prototype = parseFunctionPrototype();
 
     moveToNextToken();
-    if (currentToken.type != Token::Type::leftBracket)
+    if (currentToken.type != Token::Type::LeftBracket)
         throw ParsingException(currentOffset, "Expected {");
 
     std::vector<std::unique_ptr<NodeAST>> nodes;
     while (true) {
         moveToNextToken();
-        if (currentToken.type == Token::Type::rightBracket)
+        if (currentToken.type == Token::Type::RightBracket)
             break;
 
         auto node = parseToken();
         nodes.push_back(std::move(node));
 
         moveToNextToken();
-        if (currentToken.type == Token::Type::rightBracket)
+        if (currentToken.type == Token::Type::RightBracket)
             break;
-        if (currentToken.type != Token::Type::semicolon)
+        if (currentToken.type != Token::Type::Semicolon)
             throw ParsingException(currentOffset, "Expected ; or }");
     }
 
@@ -123,30 +123,30 @@ std::unique_ptr<FunctionDefinitionNodeAST> NodeASTParser::parseFunctionDefinitio
 std::unique_ptr<FunctionPrototypeNodeAST> NodeASTParser::parseFunctionPrototype() {
     moveToNextToken(); // Consume 'func'
 
-    if (currentToken.type != Token::Type::identifier)
+    if (currentToken.type != Token::Type::Identifier)
         throw ParsingException(currentOffset, "Expected function identifier");
 
     auto name = currentToken.text;
 
     moveToNextToken();
-    if (currentToken.type != Token::Type::leftParenthesis)
+    if (currentToken.type != Token::Type::LeftParenthesis)
         throw ParsingException(currentOffset, "Expected (");
 
     std::vector<std::unique_ptr<ReferenceNodeAST>> arguments;
     while (true) {
         moveToNextToken();
-        if (currentToken.type == Token::Type::rightParenthesis)
+        if (currentToken.type == Token::Type::RightParenthesis)
             break;
-        if (currentToken.type != Token::Type::identifier)
+        if (currentToken.type != Token::Type::Identifier)
             throw ParsingException(currentOffset, "Expected identifier or )");
 
         auto argumentReference = parseReference();
         arguments.push_back(std::move(argumentReference));
 
         moveToNextToken();
-        if (currentToken.type == Token::Type::rightParenthesis)
+        if (currentToken.type == Token::Type::RightParenthesis)
             break;
-        if (currentToken.type != Token::Type::comma)
+        if (currentToken.type != Token::Type::Comma)
             throw ParsingException(currentOffset, "Expected , or )");
     }
     return std::make_unique<FunctionPrototypeNodeAST>(FunctionPrototypeNodeAST(name, arguments));

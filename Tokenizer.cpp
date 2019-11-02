@@ -12,7 +12,7 @@ std::list<Token> Tokenizer::getTokens() {
         Token token = getNextToken();
         tokens.push_back(token);
 
-        if (token.type == Token::Type::eof)
+        if (token.type == Token::Type::Eof)
             break;
     }
     return tokens;
@@ -35,9 +35,9 @@ Token Tokenizer::getNextToken() {
         backToPreviousChar();
 
         if (identifierText == "func") {
-            return createToken(identifierText, Token::Type::func);
+            return createToken(identifierText, Token::Type::Func);
         } else {
-            return createToken(identifierText, Token::Type::identifier);
+            return createToken(identifierText, Token::Type::Identifier);
         }
     } else if (isdigit(currentChar)) { // [0-9]+
         std::string numberText;
@@ -54,7 +54,7 @@ Token Tokenizer::getNextToken() {
         } while (isdigit(currentChar = getNextCharOrEOF()) || currentChar == '.');
         backToPreviousChar();
 
-        return createToken(numberText, Token::Type::number, std::stod(numberText));
+        return createToken(numberText, Token::Type::Number, std::stod(numberText));
     } else if (currentChar == '#') {
         do {
             currentChar = getNextCharOrEOF();
@@ -62,21 +62,21 @@ Token Tokenizer::getNextToken() {
 
         return getNextToken();
     } else if (currentChar == '(') {
-        return createToken(currentCharStr, Token::Type::leftParenthesis);
+        return createToken(currentCharStr, Token::Type::LeftParenthesis);
     } else if (currentChar == ')') {
-        return createToken(currentCharStr, Token::Type::rightParenthesis);
+        return createToken(currentCharStr, Token::Type::RightParenthesis);
     } else if (currentChar == '{') {
-        return createToken(currentCharStr, Token::Type::leftBracket);
+        return createToken(currentCharStr, Token::Type::LeftBracket);
     } else if (currentChar == '}') {
-        return createToken(currentCharStr, Token::Type::rightBracket);
+        return createToken(currentCharStr, Token::Type::RightBracket);
     } else if (currentChar == ',') {
-        return createToken(currentCharStr, Token::Type::comma);
+        return createToken(currentCharStr, Token::Type::Comma);
     } else if (currentChar == ';') {
-        return createToken(currentCharStr, Token::Type::semicolon);
+        return createToken(currentCharStr, Token::Type::Semicolon);
     } else if (containsOperator(currentChar)) {
-        return createToken(currentCharStr, Token::Type::binaryOperator);
+        return createToken(currentCharStr, Token::Type::Operator);
     } else if (currentChar == EOF) {
-        return createToken(currentCharStr, Token::Type::eof);
+        return createToken(currentCharStr, Token::Type::Eof);
     } else {
         throw ParsingException(currentOffset, "Unexpected " + std::string(1, currentChar));
     }
