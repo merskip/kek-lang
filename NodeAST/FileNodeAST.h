@@ -24,9 +24,9 @@ public:
         return nodes;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+    llvm::Value *generateCode(CompileContext *context) const override {
         for (auto &node : nodes) {
-            auto *code = node->generateCode(context, module, builder);
+            auto *code = node->generateCode(context);
         }
     }
 

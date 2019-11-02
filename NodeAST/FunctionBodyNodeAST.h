@@ -23,10 +23,10 @@ public:
         return nodes;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
+    llvm::Value *generateCode(CompileContext *context) const override {
         llvm::Value *lastCode = nullptr;
         for (auto &node : nodes) {
-            lastCode = node->generateCode(context, module, builder);
+            lastCode = node->generateCode(context);
         }
         return lastCode;
     }

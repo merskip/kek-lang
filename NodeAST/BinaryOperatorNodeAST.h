@@ -35,18 +35,18 @@ public:
         return rhs;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
-        auto lhsValue = lhs->generateCode(context, module, builder);
-        auto rhsValue = rhs->generateCode(context, module, builder);
+    llvm::Value *generateCode(CompileContext *context) const override {
+        auto lhsValue = lhs->generateCode(context);
+        auto rhsValue = rhs->generateCode(context);
 
         if (operatorText == "+")
-            return builder->CreateFAdd(lhsValue, rhsValue, "add");
+            return context->builder->CreateFAdd(lhsValue, rhsValue, "add");
         else if (operatorText == "-")
-            return builder->CreateFSub(lhsValue, rhsValue, "sub");
+            return context->builder->CreateFSub(lhsValue, rhsValue, "sub");
         else if (operatorText == "/")
-            return builder->CreateFDiv(lhsValue, rhsValue, "div");
+            return context->builder->CreateFDiv(lhsValue, rhsValue, "div");
         else if (operatorText == "*")
-            return builder->CreateFMul(lhsValue, rhsValue, "mul");
+            return context->builder->CreateFMul(lhsValue, rhsValue, "mul");
         else
             throw "Unknown operator: " + operatorText;
     }

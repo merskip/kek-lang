@@ -30,8 +30,8 @@ public:
         return arguments;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
-        llvm::Function *function = module->getFunction(callee);
+    llvm::Value *generateCode(CompileContext *context) const override {
+        llvm::Function *function = context->module->getFunction(callee);
         if (function == nullptr)
             throw "Unknown function: " + callee;
 
@@ -41,12 +41,12 @@ public:
 
         std::vector<llvm::Value *> argumentsValues;
         for (auto &argument: arguments) {
-            auto *argumentCode = argument->generateCode(context, module, builder);
+            auto *argumentCode = argument->generateCode(context);
             if (!argumentCode)
                 throw "Failed compile argument";
             argumentsValues.push_back(argumentCode);
         }
-        return builder->CreateCall(function, argumentsValues, "call");
+        return context->builder->CreateCall(function, argumentsValues, "call");
     }
 
     void print(NodeASTPrinter &printer) const override {

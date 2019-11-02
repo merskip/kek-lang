@@ -6,6 +6,7 @@
 #include <llvm/Support/raw_ostream.h>
 
 void IRGenerator::run(std::unique_ptr<FileNodeAST> fileNode) {
-    fileNode->generateCode(&context, &module, &builder);
+    auto compileContext = std::make_unique<CompileContext>(&context, &module, &builder);
+    fileNode->generateCode(compileContext.get());
     module.print(llvm::outs(), nullptr);
 }

@@ -28,18 +28,19 @@ public:
         return arguments;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
-        return generateFunction(context, module, builder);
+    llvm::Value *generateCode(CompileContext *context) const override {
+        return generateFunction(context);
     }
 
-    llvm::Function *generateFunction(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const {
-        std::vector<llvm::Type *> argumentsTypes(arguments.size(), llvm::Type::getDoubleTy(*context));
-        llvm::FunctionType *functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(*context), argumentsTypes, false);
-        llvm::Function *function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, name, module);
+    llvm::Function *generateFunction(CompileContext *context) const {
+        std::vector<llvm::Type *> argumentsTypes(arguments.size(), llvm::Type::getDoubleTy(*context->context));
+        llvm::FunctionType *functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(*context->context), argumentsTypes, false);
+        llvm::Function *function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, name, context->module);
 
         int index = 0;
         for (auto &argument: function->args()) {
-            argument.setName(arguments[index].get()->getName());
+            auto &argumentName = arguments[index].get()->getName();
+            argument.setName(argumentName);
             index++;
         }
         return function;

@@ -31,17 +31,23 @@ public:
         return body;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
-        llvm::Function *function = module->getFunction(prototype->getName());
+    llvm::Value *generateCode(CompileContext *context) const override {
+        llvm::Function *function = context->module->getFunction(prototype->getName());
         if (function)
             throw "Function " + prototype->getName() + " cannot be redefined";
-        function = prototype->generateFunction(context, module, builder);
+        function = prototype->generateFunction(context);
 
-        llvm::BasicBlock *implBlock = llvm::BasicBlock::Create(*context, "implementation", function);
-        builder->SetInsertPoint(implBlock);
+        llvm::BasicBlock *implBlock = llvm::BasicBlock::Create(*context->context, "implementation", function);
+        context->builder->SetInsertPoint(implBlock);
 
-        llvm::Value *returnValue = body->generateCode(context, module, builder);
-        builder->CreateRet(returnValue);
+        context->enterScope();
+        for (auto &arg : function->args()) {
+            auto name = arg.getName().str();
+            context->addVariable(name, &arg);
+        }
+        llvm::Value *returnValue = body->generateCode(context);
+        context->leaveScope();
+        context->builder->CreateRet(returnValue);
         return function;
     }
 

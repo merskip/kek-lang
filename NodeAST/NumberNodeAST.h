@@ -21,8 +21,8 @@ public:
     }
 
     [[nodiscard]] llvm::Value *
-    generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
-        return llvm::ConstantFP::get(*context, llvm::APFloat(number));
+    generateCode(CompileContext *context) const override {
+        return llvm::ConstantFP::get(*context->context, llvm::APFloat(number));
     }
 
     void print(NodeASTPrinter &printer) const override {

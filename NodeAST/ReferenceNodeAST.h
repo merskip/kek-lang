@@ -19,8 +19,8 @@ public:
         return name;
     }
 
-    llvm::Value *generateCode(llvm::LLVMContext *context, llvm::Module *module, llvm::IRBuilder<> *builder) const override {
-        return nullptr;
+    llvm::Value *generateCode(CompileContext *context) const override {
+        return context->getVariable(name);
     }
 
     void print(NodeASTPrinter &printer) const override {

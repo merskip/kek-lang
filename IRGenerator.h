@@ -15,7 +15,6 @@ private:
     llvm::LLVMContext context;
     llvm::IRBuilder<> builder;
     llvm::Module module;
-    std::map<std::string, llvm::Value *> namedValues;
 
 public:
     IRGenerator()
@@ -23,7 +22,6 @@ public:
               builder(llvm::IRBuilder(context)),
               module(llvm::Module("kek-lang", context)) {
     }
-
 
     void run(std::unique_ptr<FileNodeAST> fileNode);
 

@@ -20,11 +20,11 @@ std::list<Token> Tokenizer::getTokens() {
 
 Token Tokenizer::getNextToken() {
     char currentChar = getNextCharOrEOF();
-    std::string currentCharStr(1, currentChar);
 
     // Skip whitespaces
     while (isspace(currentChar))
         currentChar = getNextCharOrEOF();
+    std::string currentCharStr(1, currentChar);
 
     if (isalpha(currentChar)) { // [a-Z][a-Z0-9]*
         std::string identifierText;
