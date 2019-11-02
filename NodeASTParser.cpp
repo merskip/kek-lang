@@ -21,6 +21,14 @@ std::unique_ptr<FileNodeAST> NodeASTParser::parse() {
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseToken() {
+    auto parsedNode = parseCurrentToken();
+    if (moveToNextTokenIfIsTypeOf(Token::Operator)) {
+        return parseOperator(std::move(parsedNode));
+    }
+    return parsedNode;
+}
+
+std::unique_ptr<NodeAST> NodeASTParser::parseCurrentToken() {
     switch (currentToken.type) {
         case Token::Eof:
             return nullptr;
@@ -35,6 +43,14 @@ std::unique_ptr<NodeAST> NodeASTParser::parseToken() {
         default:
             throw ParsingException(currentOffset, "Unexpected token");
     }
+}
+
+std::unique_ptr<BinaryOperatorNodeAST> NodeASTParser::parseOperator(std::unique_ptr<NodeAST> lhs) {
+    auto operatorText = currentToken.text;
+
+    moveToNextToken();
+    auto rhs = parseToken();
+    return std::make_unique<BinaryOperatorNodeAST>(BinaryOperatorNodeAST(operatorText, lhs, rhs));;
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
@@ -150,6 +166,15 @@ std::unique_ptr<FunctionPrototypeNodeAST> NodeASTParser::parseFunctionPrototype(
             throw ParsingException(currentOffset, "Expected , or )");
     }
     return std::make_unique<FunctionPrototypeNodeAST>(FunctionPrototypeNodeAST(name, arguments));
+}
+
+bool NodeASTParser::moveToNextTokenIfIsTypeOf(Token::Type tokenType) {
+    if (existsNextToken() && getNextToken().type == tokenType) {
+        moveToNextToken();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void NodeASTParser::moveToNextToken() {

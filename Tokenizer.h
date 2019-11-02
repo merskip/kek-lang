@@ -20,13 +20,15 @@ private:
 public:
     explicit Tokenizer(const std::string &text)
             : text(text) {
+        addOperator('+');
+        addOperator('-');
+        addOperator('/');
+        addOperator('*');
     }
 
-    void appendOperator(char op) {
+    void addOperator(char op) {
         operators.push_back(op);
     }
-
-
 
     std::list<Token> getTokens();
 

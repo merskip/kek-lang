@@ -14,6 +14,7 @@
 #include "NodeAST/CallNodeAST.h"
 #include "NodeAST/FunctionDefinitionNodeAST.h"
 #include "NodeAST/FileNodeAST.h"
+#include "NodeAST/BinaryOperatorNodeAST.h"
 
 class NodeASTParser {
 
@@ -21,10 +22,19 @@ private:
     std::list<Token> tokens;
     long currentOffset = -1;
     Token &currentToken;
+    std::map<std::string, int> operatorsPrecedence;
 
 public:
     explicit NodeASTParser(std::list<Token> &tokens)
             : tokens(tokens), currentToken(*tokens.begin()) {
+        addOperatorPrecedence("+", 100);
+        addOperatorPrecedence("-", 100);
+        addOperatorPrecedence("*", 500);
+        addOperatorPrecedence("/", 500);
+    }
+
+    void addOperatorPrecedence(const std::string &operatorText, int precedence) {
+        operatorsPrecedence[operatorText] = precedence;
     }
 
     std::unique_ptr<FileNodeAST> parse();
@@ -32,6 +42,10 @@ public:
 private:
 
     std::unique_ptr<NodeAST> parseToken();
+
+    std::unique_ptr<NodeAST> parseCurrentToken();
+
+    std::unique_ptr<BinaryOperatorNodeAST> parseOperator(std::unique_ptr<NodeAST> lhs);
 
     std::unique_ptr<NodeAST> parseParentheses();
 
@@ -48,6 +62,8 @@ private:
     std::unique_ptr<FunctionDefinitionNodeAST> parseFunctionDefinition();
 
     std::unique_ptr<FunctionPrototypeNodeAST> parseFunctionPrototype();
+
+    bool moveToNextTokenIfIsTypeOf(Token::Type tokenType);
 
     void moveToNextToken();
 
