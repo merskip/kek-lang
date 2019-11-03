@@ -5,7 +5,6 @@
 #pragma once
 
 #include <ostream>
-#include "../NodeASTPrinter.h"
 #include "../CompileContext.h"
 #include <llvm/IR/Value.h>
 #include <llvm/IR/LLVMContext.h>

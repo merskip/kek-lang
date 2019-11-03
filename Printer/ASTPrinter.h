@@ -5,19 +5,16 @@
 #pragma once
 
 #include <string>
-#include <functional>
-#include <sstream>
-#include <map>
-#include "NodeASTVisitor.h"
+#include <memory>
+#include "../NodeASTVisitor.h"
+#include "ASTPrinterOutput.h"
 
 class NodeAST;
 
-class NodeASTPrinter : private NodeASTVisitor {
+class ASTPrinter : private NodeASTVisitor {
 
 private:
-    int indent = 0;
-    bool skipNextIndent = false;
-    std::stringstream output;
+    std::unique_ptr<ASTPrinterOutput> output = nullptr;
 
 public:
     std::string print(NodeAST *node);
@@ -31,22 +28,5 @@ private:
     void visitFunctionDefinitionNode(FunctionDefinitionNodeAST *functionDefinitionNode) override;
     void visitNumberNode(NumberNodeAST *numberNode) override;
     void visitReferenceNode(ReferenceNodeAST *referenceNode) override;
-
-    void print(const std::string &tag, const std::map<std::string, std::string> &attributes = {});
-
-    void printChildNode(NodeAST &node, const std::string &tag = "",
-                        const std::map<std::string, std::string> &attributes = {});
-
-    std::string getOutput();
-
-    std::string getIndent();
-
-    static std::string getTagString(const std::string &tag);
-
-    static std::string getChildTagString(const std::string &tag);
-
-    static std::string getAttributesString(const std::map<std::string, std::string> &attributes);
-
-
 };
 

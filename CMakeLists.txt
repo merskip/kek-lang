@@ -16,6 +16,7 @@ add_executable(
         main.cpp
         Tokenizer.cpp
         Console.cpp
+        NodeAST.h
         NodeAST/NodeAST.h
         NodeAST/NumberNodeAST.h
         NodeAST/NumberNodeAST.h
@@ -27,11 +28,13 @@ add_executable(
         NodeAST/FileNodeAST.h
         NodeASTParser.cpp
         NodeASTParser.h
-        NodeASTPrinter.h
-        NodeASTPrinter.cpp
         NodeAST/FunctionBodyNodeAST.h
         IRGenerator.cpp IRGenerator.h
         CompileContext.h
-        NodeASTVisitor.h)
+        NodeASTVisitor.h
+        Printer/ASTPrinter.h
+        Printer/ASTPrinter.cpp
+        Printer/ASTPrinterOutput.cpp
+        Printer/ASTPrinterOutput.h)
 
 target_link_libraries(kek_lang LLVM)

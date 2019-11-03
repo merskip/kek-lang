@@ -5,6 +5,7 @@
 #include "Console.h"
 #include "NodeASTParser.h"
 #include "IRGenerator.h"
+#include "Printer/ASTPrinter.h"
 
 int main() {
 
@@ -21,7 +22,7 @@ int main() {
             NodeASTParser parser(tokens);
             auto rootNode = parser.parse();
 
-            NodeASTPrinter printer;
+            ASTPrinter printer;
             std::cout << printer.print(rootNode.get()) << std::endl;
 
             IRGenerator irGenerator;
