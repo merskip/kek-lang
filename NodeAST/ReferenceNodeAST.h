@@ -22,9 +22,5 @@ public:
     void accept(NodeASTVisitor *visitor) override {
         visitor->visitReferenceNode(this);
     }
-
-    llvm::Value *generateCode(CompileContext *context) const override {
-        return context->getVariable(name);
-    }
 };
 

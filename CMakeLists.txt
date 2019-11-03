@@ -26,9 +26,8 @@ add_executable(
         NodeASTParser.cpp
         NodeASTParser.h
         NodeAST/FunctionBodyNodeAST.h
-        IRGenerator.cpp IRGenerator.h
-        CompileContext.h
-        NodeASTVisitor.h
+        Utilities/NodeASTVisitor.h
+        Utilities/NodeASTValueVisitor.h
         Printer/ASTPrinter.h
         Printer/ASTPrinter.cpp
         Printer/ASTPrinterOutput.cpp
@@ -36,6 +35,10 @@ add_executable(
         Utilities/Console.h
         Utilities/Console.cpp
         Utilities/Arguments.h
-        Utilities/Arguments.cpp)
+        Utilities/Arguments.cpp
+        Compiler/LLVMCompiler.cpp
+        Compiler/LLVMCompiler.h
+        Compiler/VariablesScope.cpp
+        Compiler/VariablesScope.h)
 
 target_link_libraries(kek_lang LLVM)

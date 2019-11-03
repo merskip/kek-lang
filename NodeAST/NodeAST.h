@@ -5,17 +5,21 @@
 #pragma once
 
 #include <ostream>
-#include "../CompileContext.h"
 #include <llvm/IR/Value.h>
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/IRBuilder.h>
-#include "../NodeASTVisitor.h"
+#include "../Utilities/NodeASTVisitor.h"
+#include "../Utilities/NodeASTValueVisitor.h"
 
 class NodeAST {
 
 public:
     virtual void accept(NodeASTVisitor *visitor) = 0;
 
-    [[nodiscard]] virtual llvm::Value *generateCode(CompileContext *context) const = 0;
+    template<typename ReturnValue>
+    ReturnValue acceptForValue(NodeASTValueVisitor<ReturnValue> *valueVisitor) {
+        accept(valueVisitor);
+        return valueVisitor->getValue();
+    }
 };

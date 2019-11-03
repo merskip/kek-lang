@@ -6,7 +6,7 @@
 
 #include <string>
 #include <memory>
-#include "../NodeASTVisitor.h"
+#include "../Utilities/NodeASTVisitor.h"
 #include "ASTPrinterOutput.h"
 
 class NodeAST;

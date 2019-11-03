@@ -4,9 +4,9 @@
 #include "ParsingException.h"
 #include "Utilities/Console.h"
 #include "NodeASTParser.h"
-#include "IRGenerator.h"
 #include "Printer/ASTPrinter.h"
 #include "Utilities/Arguments.h"
+#include "Compiler/LLVMCompiler.h"
 
 void parse(const std::string &text, Console *console);
 void compileFile(const std::string &filename);
@@ -65,6 +65,6 @@ void parse(const std::string &text, Console *console) {
         std::cout << printer.print(rootNode.get()) << std::endl;
     }
 
-    IRGenerator irGenerator;
-    irGenerator.run(std::move(rootNode));
+    LLVMCompiler compiler("kek-lang");
+    compiler.compile(rootNode.get());
 }

@@ -23,9 +23,4 @@ public:
     void accept(NodeASTVisitor *visitor) override {
         visitor->visitNumberNode(this);
     }
-
-    [[nodiscard]] llvm::Value *
-    generateCode(CompileContext *context) const override {
-        return llvm::ConstantFP::get(*context->context, llvm::APFloat(number));
-    }
 };

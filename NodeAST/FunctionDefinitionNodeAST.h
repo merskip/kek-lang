@@ -34,25 +34,5 @@ public:
     void accept(NodeASTVisitor *visitor) override {
         visitor->visitFunctionDefinitionNode(this);
     }
-
-    llvm::Value *generateCode(CompileContext *context) const override {
-        llvm::Function *function = context->module->getFunction(prototype->getName());
-        if (function)
-            throw "Function " + prototype->getName() + " cannot be redefined";
-        function = prototype->generateFunction(context);
-
-        llvm::BasicBlock *implBlock = llvm::BasicBlock::Create(*context->context, "implementation", function);
-        context->builder->SetInsertPoint(implBlock);
-
-        context->enterScope();
-        for (auto &arg : function->args()) {
-            auto name = arg.getName().str();
-            context->addVariable(name, &arg);
-        }
-        llvm::Value *returnValue = body->generateCode(context);
-        context->leaveScope();
-        context->builder->CreateRet(returnValue);
-        return function;
-    }
 };
 

@@ -27,11 +27,5 @@ public:
     void accept(NodeASTVisitor *visitor) override {
         visitor->visitFileNode(this);
     }
-
-    llvm::Value *generateCode(CompileContext *context) const override {
-        for (auto &node : nodes) {
-            auto *code = node->generateCode(context);
-        }
-    }
 };
 

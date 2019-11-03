@@ -33,24 +33,5 @@ public:
     void accept(NodeASTVisitor *visitor) override {
         visitor->visitCallNode(this);
     }
-
-    llvm::Value *generateCode(CompileContext *context) const override {
-        llvm::Function *function = context->module->getFunction(callee);
-        if (function == nullptr)
-            throw "Unknown function: " + callee;
-
-        if (function->arg_size() != arguments.size())
-            throw "Expected " + std::to_string(function->arg_size())
-                  + " arguments but got " + std::to_string(arguments.size());
-
-        std::vector<llvm::Value *> argumentsValues;
-        for (auto &argument: arguments) {
-            auto *argumentCode = argument->generateCode(context);
-            if (!argumentCode)
-                throw "Failed compile argument";
-            argumentsValues.push_back(argumentCode);
-        }
-        return context->builder->CreateCall(function, argumentsValues, "call");
-    }
 };
 

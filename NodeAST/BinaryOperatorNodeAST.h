@@ -38,21 +38,5 @@ public:
     void accept(NodeASTVisitor *visitor) override {
         visitor->visitBinaryOperatorNode(this);
     }
-
-    llvm::Value *generateCode(CompileContext *context) const override {
-        auto lhsValue = lhs->generateCode(context);
-        auto rhsValue = rhs->generateCode(context);
-
-        if (operatorText == "+")
-            return context->builder->CreateFAdd(lhsValue, rhsValue, "add");
-        else if (operatorText == "-")
-            return context->builder->CreateFSub(lhsValue, rhsValue, "sub");
-        else if (operatorText == "/")
-            return context->builder->CreateFDiv(lhsValue, rhsValue, "div");
-        else if (operatorText == "*")
-            return context->builder->CreateFMul(lhsValue, rhsValue, "mul");
-        else
-            throw "Unknown operator: " + operatorText;
-    }
 };
 
