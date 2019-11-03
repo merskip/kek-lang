@@ -33,12 +33,5 @@ public:
             auto *code = node->generateCode(context);
         }
     }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("FileNodeAST");
-        for (auto &node : nodes) {
-            printer.printChildNode(*node);
-        }
-    }
 };
 

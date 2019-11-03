@@ -52,14 +52,5 @@ public:
         }
         return context->builder->CreateCall(function, argumentsValues, "call");
     }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("CallNodeAST", {
-                {"callee", callee},
-        });
-        for (auto &argument : arguments) {
-            printer.printChildNode(*argument, "Argument");
-        }
-    }
 };
 

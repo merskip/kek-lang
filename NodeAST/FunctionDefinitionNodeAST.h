@@ -54,11 +54,5 @@ public:
         context->builder->CreateRet(returnValue);
         return function;
     }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("FunctionDefinitionNodeAST");
-        printer.printChildNode(*prototype, "Prototype");
-        printer.printChildNode(*body, "Body");
-    }
 };
 

@@ -17,12 +17,12 @@ class ReferenceNodeAST;
 class NodeASTVisitor {
 
 public:
-    virtual void visitBinaryOperatorNode(BinaryOperatorNodeAST *binaryOperatorNode) = 0;
-    virtual void visitCallNode(CallNodeAST *callNode) = 0;
-    virtual void visitFileNode(FileNodeAST *fileNode) = 0;
-    virtual void visitFunctionBodyNode(FunctionBodyNodeAST *functionBodyNode) = 0;
-    virtual void visitFunctionPrototypeNode(FunctionPrototypeNodeAST *functionPrototypeNode) = 0;
-    virtual void visitFunctionDefinitionNode(FunctionDefinitionNodeAST *functionDefinitionNode) = 0;
-    virtual void visitNumberNode(NumberNodeAST *numberNode) = 0;
-    virtual void visitReferenceNode(ReferenceNodeAST *referenceNode) = 0;
+    virtual void visitBinaryOperatorNode(BinaryOperatorNodeAST *node) = 0;
+    virtual void visitCallNode(CallNodeAST *node) = 0;
+    virtual void visitFileNode(FileNodeAST *node) = 0;
+    virtual void visitFunctionBodyNode(FunctionBodyNodeAST *node) = 0;
+    virtual void visitFunctionPrototypeNode(FunctionPrototypeNodeAST *node) = 0;
+    virtual void visitFunctionDefinitionNode(FunctionDefinitionNodeAST *node) = 0;
+    virtual void visitNumberNode(NumberNodeAST *node) = 0;
+    virtual void visitReferenceNode(ReferenceNodeAST *node) = 0;
 };

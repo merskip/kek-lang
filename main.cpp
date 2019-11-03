@@ -22,8 +22,7 @@ int main() {
             auto rootNode = parser.parse();
 
             NodeASTPrinter printer;
-            rootNode->print(printer);
-            std::cout << printer.getOutput() << std::endl;
+            std::cout << printer.print(rootNode.get()) << std::endl;
 
             IRGenerator irGenerator;
             irGenerator.run(std::move(rootNode));

@@ -54,14 +54,5 @@ public:
         else
             throw "Unknown operator: " + operatorText;
     }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("BinaryOperatorNodeAST", {
-                {"operator", operatorText},
-        });
-
-        printer.printChildNode(*lhs, "lhs");
-        printer.printChildNode(*rhs, "rhs");
-    }
 };
 

@@ -19,6 +19,4 @@ public:
     virtual void accept(NodeASTVisitor *visitor) = 0;
 
     [[nodiscard]] virtual llvm::Value *generateCode(CompileContext *context) const = 0;
-
-    virtual void print(NodeASTPrinter &printer) const = 0;
 };

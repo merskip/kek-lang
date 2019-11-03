@@ -8,10 +8,11 @@
 #include <functional>
 #include <sstream>
 #include <map>
+#include "NodeASTVisitor.h"
 
 class NodeAST;
 
-class NodeASTPrinter {
+class NodeASTPrinter : private NodeASTVisitor {
 
 private:
     int indent = 0;
@@ -19,15 +20,25 @@ private:
     std::stringstream output;
 
 public:
+    std::string print(NodeAST *node);
+
+private:
+    void visitBinaryOperatorNode(BinaryOperatorNodeAST *node) override;
+    void visitCallNode(CallNodeAST *callNode) override;
+    void visitFileNode(FileNodeAST *fileNode) override;
+    void visitFunctionBodyNode(FunctionBodyNodeAST *functionBodyNode) override;
+    void visitFunctionPrototypeNode(FunctionPrototypeNodeAST *functionPrototypeNode) override;
+    void visitFunctionDefinitionNode(FunctionDefinitionNodeAST *functionDefinitionNode) override;
+    void visitNumberNode(NumberNodeAST *numberNode) override;
+    void visitReferenceNode(ReferenceNodeAST *referenceNode) override;
 
     void print(const std::string &tag, const std::map<std::string, std::string> &attributes = {});
 
-    void printChildNode(const NodeAST &node, const std::string &tag = "",
+    void printChildNode(NodeAST &node, const std::string &tag = "",
                         const std::map<std::string, std::string> &attributes = {});
 
     std::string getOutput();
 
-private:
     std::string getIndent();
 
     static std::string getTagString(const std::string &tag);

@@ -26,11 +26,5 @@ public:
     llvm::Value *generateCode(CompileContext *context) const override {
         return context->getVariable(name);
     }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("ReferenceNodeAST", {
-                {"name", name}
-        });
-    }
 };
 

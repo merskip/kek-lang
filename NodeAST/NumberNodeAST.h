@@ -28,10 +28,4 @@ public:
     generateCode(CompileContext *context) const override {
         return llvm::ConstantFP::get(*context->context, llvm::APFloat(number));
     }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("NumberNodeAST", {
-                {"value", std::to_string(number)}
-        });
-    }
 };

@@ -8,6 +8,7 @@
 #include "NodeAST.h"
 #include <string>
 #include <vector>
+#include "ReferenceNodeAST.h"
 
 class FunctionPrototypeNodeAST : public NodeAST {
 
@@ -48,15 +49,6 @@ public:
             index++;
         }
         return function;
-    }
-
-    void print(NodeASTPrinter &printer) const override {
-        printer.print("FunctionPrototypeNodeAST", {
-                {"name", name}
-        });
-        for (auto &argument : arguments) {
-            printer.printChildNode(*argument, "Argument");
-        }
     }
 };
 
