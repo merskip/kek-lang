@@ -11,10 +11,13 @@
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/IRBuilder.h>
+#include "../NodeASTVisitor.h"
 
 class NodeAST {
 
 public:
+    virtual void accept(NodeASTVisitor *visitor) = 0;
+
     [[nodiscard]] virtual llvm::Value *generateCode(CompileContext *context) const = 0;
 
     virtual void print(NodeASTPrinter &printer) const = 0;

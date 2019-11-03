@@ -31,6 +31,10 @@ public:
         return body;
     }
 
+    void accept(NodeASTVisitor *visitor) override {
+        visitor->visitFunctionDefinitionNode(this);
+    }
+
     llvm::Value *generateCode(CompileContext *context) const override {
         llvm::Function *function = context->module->getFunction(prototype->getName());
         if (function)

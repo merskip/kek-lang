@@ -23,6 +23,10 @@ public:
         return nodes;
     }
 
+    void accept(NodeASTVisitor *visitor) override {
+        visitor->visitFunctionBodyNode(this);
+    }
+
     llvm::Value *generateCode(CompileContext *context) const override {
         llvm::Value *lastCode = nullptr;
         for (auto &node : nodes) {

@@ -35,6 +35,10 @@ public:
         return rhs;
     }
 
+    void accept(NodeASTVisitor *visitor) override {
+        visitor->visitBinaryOperatorNode(this);
+    }
+
     llvm::Value *generateCode(CompileContext *context) const override {
         auto lhsValue = lhs->generateCode(context);
         auto rhsValue = rhs->generateCode(context);

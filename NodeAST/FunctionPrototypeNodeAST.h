@@ -28,6 +28,10 @@ public:
         return arguments;
     }
 
+    void accept(NodeASTVisitor *visitor) override {
+        visitor->visitFunctionPrototypeNode(this);
+    }
+
     llvm::Value *generateCode(CompileContext *context) const override {
         return generateFunction(context);
     }

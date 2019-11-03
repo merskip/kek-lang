@@ -30,6 +30,10 @@ public:
         return arguments;
     }
 
+    void accept(NodeASTVisitor *visitor) override {
+        visitor->visitCallNode(this);
+    }
+
     llvm::Value *generateCode(CompileContext *context) const override {
         llvm::Function *function = context->module->getFunction(callee);
         if (function == nullptr)
