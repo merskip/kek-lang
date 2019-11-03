@@ -20,33 +20,33 @@ void LLVMCompiler::compile(FileNodeAST *node) {
     module.print(llvm::outs(), nullptr);
 }
 
-llvm::Value *LLVMCompiler::visitForValueBinaryOperatorNode(BinaryOperatorNodeAST *node) {
-    auto lhsValue = node->getLhs()->acceptForValue(this);
-    auto rhsValue = node->getRhs()->acceptForValue(this);
+llvm::Value *LLVMCompiler::visitForValueBinaryOperatorNode(const BinaryOperatorNodeAST *node) {
+    auto lhsValue = node->lhs->acceptForValue(this);
+    auto rhsValue = node->rhs->acceptForValue(this);
 
-    if (node->getOperatorText() == "+")
+    if (node->operatorText == "+")
         return builder.CreateFAdd(lhsValue, rhsValue, "add");
-    else if (node->getOperatorText() == "-")
+    else if (node->operatorText == "-")
         return builder.CreateFSub(lhsValue, rhsValue, "sub");
-    else if (node->getOperatorText() == "/")
+    else if (node->operatorText == "/")
         return builder.CreateFDiv(lhsValue, rhsValue, "div");
-    else if (node->getOperatorText() == "*")
+    else if (node->operatorText == "*")
         return builder.CreateFMul(lhsValue, rhsValue, "mul");
     else
-        throw "Unknown operator: " + node->getOperatorText();
+        throw "Unknown operator: " + node->operatorText;
 }
 
-llvm::Value *LLVMCompiler::visitForValueCallNode(CallNodeAST *node) {
-    llvm::Function *function = module.getFunction(node->getCallee());
+llvm::Value *LLVMCompiler::visitForValueCallNode(const CallNodeAST *node) {
+    llvm::Function *function = module.getFunction(node->callee);
     if (function == nullptr)
-        throw "Unknown function: " + node->getCallee();
+        throw "Unknown function: " + node->callee;
 
-    if (function->arg_size() != node->getArguments().size())
+    if (function->arg_size() != node->arguments.size())
         throw "Expected " + std::to_string(function->arg_size())
-              + " arguments but got " + std::to_string(node->getArguments().size());
+              + " arguments but got " + std::to_string(node->arguments.size());
 
     std::vector<llvm::Value *> argumentsValues;
-    for (auto &argument: node->getArguments()) {
+    for (auto &argument: node->arguments) {
         auto *argumentCode = argument->acceptForValue(this);
         if (!argumentCode)
             throw "Failed compile argument";
@@ -55,40 +55,40 @@ llvm::Value *LLVMCompiler::visitForValueCallNode(CallNodeAST *node) {
     return builder.CreateCall(function, argumentsValues, "call");
 }
 
-llvm::Value *LLVMCompiler::visitForValueFileNode(FileNodeAST *node) {
-    for (auto &childNode : node->getNodes()) {
+llvm::Value *LLVMCompiler::visitForValueFileNode(const FileNodeAST *node) {
+    for (auto &childNode : node->nodes) {
         childNode->acceptForValue(this);
     }
     return nullptr;
 }
 
-llvm::Value *LLVMCompiler::visitForValueFunctionBodyNode(FunctionBodyNodeAST *node) {
+llvm::Value *LLVMCompiler::visitForValueFunctionBodyNode(const FunctionBodyNodeAST *node) {
     llvm::Value *lastValue = nullptr;
-    for (auto &childNode : node->getNodes()) {
+    for (auto &childNode : node->nodes) {
         lastValue = childNode->acceptForValue(this);
     }
     return lastValue;
 }
 
-llvm::Value *LLVMCompiler::visitForValueFunctionPrototypeNode(FunctionPrototypeNodeAST *node) {
-    std::vector<llvm::Type *> argumentsTypes(node->getArguments().size(), llvm::Type::getDoubleTy(context));
+llvm::Value *LLVMCompiler::visitForValueFunctionPrototypeNode(const FunctionPrototypeNodeAST *node) {
+    std::vector<llvm::Type *> argumentsTypes(node->arguments.size(), llvm::Type::getDoubleTy(context));
     llvm::FunctionType *functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(context), argumentsTypes, false);
-    llvm::Function *function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, node->getName(), &module);
+    llvm::Function *function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, node->name, &module);
 
     int index = 0;
     for (auto &argument: function->args()) {
-        auto &argumentName = node->getArguments()[index].get()->getName();
+        auto &argumentName = node->arguments[index].get()->name;
         argument.setName(argumentName);
         index++;
     }
     return function;
 }
 
-llvm::Value *LLVMCompiler::visitForValueFunctionDefinitionNode(FunctionDefinitionNodeAST *node) {
-    llvm::Function *function = module.getFunction(node->getPrototype()->getName());
+llvm::Value *LLVMCompiler::visitForValueFunctionDefinitionNode(const FunctionDefinitionNodeAST *node) {
+    llvm::Function *function = module.getFunction(node->prototype->name);
     if (function)
-        throw "Function " + node->getPrototype()->getName() + " cannot be redefined";
-    function = (llvm::Function *)(node->getPrototype()->acceptForValue(this));
+        throw "Function " + node->prototype->name + " cannot be redefined";
+    function = (llvm::Function *)(node->prototype->acceptForValue(this));
 
     llvm::BasicBlock *implBlock = llvm::BasicBlock::Create(context, "implementation", function);
     builder.SetInsertPoint(implBlock);
@@ -99,18 +99,18 @@ llvm::Value *LLVMCompiler::visitForValueFunctionDefinitionNode(FunctionDefinitio
             auto name = arg.getName().str();
             addVariable(name, &arg);
         }
-        returnValue = node->getBody()->acceptForValue(this);
+        returnValue = node->body->acceptForValue(this);
     });
     builder.CreateRet(returnValue);
     return function;
 }
 
-llvm::Value *LLVMCompiler::visitForValueNumberNode(NumberNodeAST *node) {
-    return llvm::ConstantFP::get(context, llvm::APFloat(node->getNumber()));
+llvm::Value *LLVMCompiler::visitForValueNumberNode(const NumberNodeAST *node) {
+    return llvm::ConstantFP::get(context, llvm::APFloat(node->number));
 }
 
-llvm::Value *LLVMCompiler::visitForValueReferenceNode(ReferenceNodeAST *node) {
-    return getVariable(node->getName());
+llvm::Value *LLVMCompiler::visitForValueReferenceNode(const ReferenceNodeAST *node) {
+    return getVariable(node->name);
 }
 
 void LLVMCompiler::enterScope(const std::function<void(void)> &inScope) {

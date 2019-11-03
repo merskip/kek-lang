@@ -5,69 +5,67 @@
 #include "ASTPrinter.h"
 #include "../NodeAST.h"
 
-std::string ASTPrinter::print(NodeAST *node) {
+std::string ASTPrinter::print(const NodeAST *node) {
     output = std::make_unique<ASTPrinterOutput>();
     node->accept(this);
     return output->getOutput();
 }
 
-void ASTPrinter::visitBinaryOperatorNode(BinaryOperatorNodeAST *node) {
+void ASTPrinter::visitBinaryOperatorNode(const BinaryOperatorNodeAST *node) {
     output->print("BinaryOperatorNodeAST", {
-            {"operator", node->getOperatorText()},
+            {"operator", node->operatorText},
     });
 
-    output->printChildNode(this, *node->getLhs(), "lhs");
-    output->printChildNode(this, *node->getRhs(), "rhs");
+    output->printChildNode(this, node->lhs.get(), "lhs");
+    output->printChildNode(this, node->rhs.get(), "rhs");
 }
 
-void ASTPrinter::visitCallNode(CallNodeAST *node) {
+void ASTPrinter::visitCallNode(const CallNodeAST *node) {
     output->print("CallNodeAST", {
-            {"callee", node->getCallee()},
+            {"callee", node->callee},
     });
-    for (auto &argument : node->getArguments()) {
-        output->printChildNode(this,*argument, "Argument");
+    for (auto &argument : node->arguments) {
+        output->printChildNode(this, argument.get(), "Argument");
     }
 }
 
-void ASTPrinter::visitFileNode(FileNodeAST *node) {
+void ASTPrinter::visitFileNode(const FileNodeAST *node) {
     output->print("FileNodeAST");
-    for (auto &childNode : node->getNodes()) {
-        output->printChildNode(this,*childNode);
+    for (auto &childNode : node->nodes) {
+        output->printChildNode(this, childNode.get());
     }
 }
 
-void ASTPrinter::visitFunctionBodyNode(FunctionBodyNodeAST *node) {
+void ASTPrinter::visitFunctionBodyNode(const FunctionBodyNodeAST *node) {
     output->print("FunctionBodyNodeAST");
-    for (auto &childNode : node->getNodes()) {
-        output->printChildNode(this,*childNode);
+    for (auto &childNode : node->nodes) {
+        output->printChildNode(this, childNode.get());
     }
 }
 
-void ASTPrinter::visitFunctionPrototypeNode(FunctionPrototypeNodeAST *node) {
+void ASTPrinter::visitFunctionPrototypeNode(const FunctionPrototypeNodeAST *node) {
     output->print("FunctionPrototypeNodeAST", {
-            {"name", node->getName()}
+            {"name", node->name}
     });
-    for (auto &argument : node->getArguments()) {
-        output->printChildNode(this,*argument, "Argument");
+    for (auto &argument : node->arguments) {
+        output->printChildNode(this, argument.get(), "Argument");
     }
 }
 
-void ASTPrinter::visitFunctionDefinitionNode(FunctionDefinitionNodeAST *node) {
+void ASTPrinter::visitFunctionDefinitionNode(const FunctionDefinitionNodeAST *node) {
     output->print("FunctionDefinitionNodeAST");
-    output->printChildNode(this,*node->getPrototype(), "Prototype");
-    output->printChildNode(this,*node->getBody(), "Body");
+    output->printChildNode(this, node->prototype.get(), "Prototype");
+    output->printChildNode(this, node->body.get(), "Body");
 }
 
-void ASTPrinter::visitNumberNode(NumberNodeAST *node) {
+void ASTPrinter::visitNumberNode(const NumberNodeAST *node) {
     output->print("NumberNodeAST", {
-            {"value", std::to_string(node->getNumber())}
+            {"value", std::to_string(node->number)}
     });
 }
 
-void ASTPrinter::visitReferenceNode(ReferenceNodeAST *node) {
+void ASTPrinter::visitReferenceNode(const ReferenceNodeAST *node) {
     output->print("ReferenceNodeAST", {
-            {"name", node->getName()}
+            {"name", node->name}
     });
 }
-
-

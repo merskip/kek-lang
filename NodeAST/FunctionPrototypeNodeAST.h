@@ -10,26 +10,15 @@
 #include <vector>
 #include "ReferenceNodeAST.h"
 
-class FunctionPrototypeNodeAST : public NodeAST {
+struct FunctionPrototypeNodeAST : public NodeAST {
 
-private:
     std::string name;
     std::vector<std::unique_ptr<ReferenceNodeAST>> arguments;
 
-public:
     FunctionPrototypeNodeAST(std::string &name, std::vector<std::unique_ptr<ReferenceNodeAST>> &arguments)
-            : name(name), arguments(std::move(arguments)) {
-    }
+            : name(name), arguments(std::move(arguments)) {}
 
-    [[nodiscard]] const std::string &getName() const {
-        return name;
-    }
-
-    [[nodiscard]] const std::vector<std::unique_ptr<ReferenceNodeAST>> &getArguments() const {
-        return arguments;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitFunctionPrototypeNode(this);
     }
 };

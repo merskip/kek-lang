@@ -12,7 +12,7 @@ void ASTPrinterOutput::print(const std::string &tag, const std::map<std::string,
 }
 
 void ASTPrinterOutput::printChildNode(NodeASTVisitor *visitor,
-                                      NodeAST &node, const std::string &tag,
+                                      const NodeAST *node, const std::string &tag,
                                       const std::map<std::string, std::string> &attributes) {
     static const std::string childIndent = " - ";
 
@@ -27,7 +27,7 @@ void ASTPrinterOutput::printChildNode(NodeASTVisitor *visitor,
         skipNextIndent = true;
 
     indent += childIndent.size();
-    node.accept(visitor);
+    node->accept(visitor);
     indent -= childIndent.size();
 }
 

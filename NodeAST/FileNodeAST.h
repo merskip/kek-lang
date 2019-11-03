@@ -10,22 +10,15 @@
 #include <memory>
 #include "NodeAST.h"
 
-class FileNodeAST : public NodeAST {
+struct FileNodeAST : public NodeAST {
 
-private:
     std::vector<std::unique_ptr<NodeAST>> nodes;
 
-public:
-    explicit FileNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
+    FileNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
             : nodes(std::move(nodes)) {
     }
 
-    [[nodiscard]] const std::vector<std::unique_ptr<NodeAST>> &getNodes() const {
-        return nodes;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitFileNode(this);
     }
 };
-

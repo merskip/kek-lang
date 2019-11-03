@@ -23,14 +23,14 @@ public:
     void compile(FileNodeAST *node);
 
 private:
-    llvm::Value *visitForValueBinaryOperatorNode(BinaryOperatorNodeAST *node) override;
-    llvm::Value *visitForValueCallNode(CallNodeAST *node) override;
-    llvm::Value *visitForValueFileNode(FileNodeAST *node) override;
-    llvm::Value *visitForValueFunctionBodyNode(FunctionBodyNodeAST *node) override;
-    llvm::Value *visitForValueFunctionPrototypeNode(FunctionPrototypeNodeAST *node) override;
-    llvm::Value *visitForValueFunctionDefinitionNode(FunctionDefinitionNodeAST *node) override;
-    llvm::Value *visitForValueNumberNode(NumberNodeAST *node) override;
-    llvm::Value *visitForValueReferenceNode(ReferenceNodeAST *node) override;
+    llvm::Value *visitForValueBinaryOperatorNode(const BinaryOperatorNodeAST *node) override;
+    llvm::Value *visitForValueCallNode(const CallNodeAST *node) override;
+    llvm::Value *visitForValueFileNode(const FileNodeAST *node) override;
+    llvm::Value *visitForValueFunctionBodyNode(const FunctionBodyNodeAST *node) override;
+    llvm::Value *visitForValueFunctionPrototypeNode(const FunctionPrototypeNodeAST *node) override;
+    llvm::Value *visitForValueFunctionDefinitionNode(const FunctionDefinitionNodeAST *node) override;
+    llvm::Value *visitForValueNumberNode(const NumberNodeAST *node) override;
+    llvm::Value *visitForValueReferenceNode(const ReferenceNodeAST *node) override;
 
     void enterScope(const std::function<void(void)> &inScope);
     void addVariable(const std::string &name, llvm::Value *value);

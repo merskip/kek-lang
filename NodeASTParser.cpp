@@ -61,7 +61,7 @@ std::unique_ptr<BinaryOperatorNodeAST> NodeASTParser::parseOperator(std::unique_
 
     moveToNextToken();
     auto rhs = parseToken(precedence);
-    return std::make_unique<BinaryOperatorNodeAST>(BinaryOperatorNodeAST(operatorText, lhs, rhs));;
+    return std::make_unique<BinaryOperatorNodeAST>(BinaryOperatorNodeAST(operatorText, lhs, rhs));
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
@@ -78,7 +78,7 @@ std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
 }
 
 std::unique_ptr<NumberNodeAST> NodeASTParser::parseNumber() {
-    return std::make_unique<NumberNodeAST>(NumberNodeAST(currentToken.numberValue));
+    return std::make_unique<NumberNodeAST>(currentToken.numberValue);
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseReferenceOrCall() {

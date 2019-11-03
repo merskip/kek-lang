@@ -8,19 +8,13 @@
 #include <llvm/IR/IRBuilder.h>
 #include "NodeAST.h"
 
-class NumberNodeAST : public NodeAST {
+struct NumberNodeAST : public NodeAST {
 
-private:
     double number;
 
-public:
-    explicit NumberNodeAST(double number) : number(number) {}
+    NumberNodeAST(double number) : number(number) {}
 
-    [[nodiscard]] double getNumber() const {
-        return number;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitNumberNode(this);
     }
 };

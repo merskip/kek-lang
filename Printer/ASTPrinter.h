@@ -17,16 +17,16 @@ private:
     std::unique_ptr<ASTPrinterOutput> output = nullptr;
 
 public:
-    std::string print(NodeAST *node);
+    std::string print(const NodeAST *node);
 
 private:
-    void visitBinaryOperatorNode(BinaryOperatorNodeAST *node) override;
-    void visitCallNode(CallNodeAST *callNode) override;
-    void visitFileNode(FileNodeAST *fileNode) override;
-    void visitFunctionBodyNode(FunctionBodyNodeAST *functionBodyNode) override;
-    void visitFunctionPrototypeNode(FunctionPrototypeNodeAST *functionPrototypeNode) override;
-    void visitFunctionDefinitionNode(FunctionDefinitionNodeAST *functionDefinitionNode) override;
-    void visitNumberNode(NumberNodeAST *numberNode) override;
-    void visitReferenceNode(ReferenceNodeAST *referenceNode) override;
+    void visitBinaryOperatorNode(const BinaryOperatorNodeAST *node) override;
+    void visitCallNode(const CallNodeAST *callNode) override;
+    void visitFileNode(const FileNodeAST *fileNode) override;
+    void visitFunctionBodyNode(const FunctionBodyNodeAST *functionBodyNode) override;
+    void visitFunctionPrototypeNode(const FunctionPrototypeNodeAST *functionPrototypeNode) override;
+    void visitFunctionDefinitionNode(const FunctionDefinitionNodeAST *functionDefinitionNode) override;
+    void visitNumberNode(const NumberNodeAST *numberNode) override;
+    void visitReferenceNode(const ReferenceNodeAST *referenceNode) override;
 };
 

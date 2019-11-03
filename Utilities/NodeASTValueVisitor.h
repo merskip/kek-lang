@@ -19,44 +19,44 @@ public:
         return value;
     }
 
-    virtual ReturnValue visitForValueBinaryOperatorNode(BinaryOperatorNodeAST *node) = 0;
-    virtual ReturnValue visitForValueCallNode(CallNodeAST *node) = 0;
-    virtual ReturnValue visitForValueFileNode(FileNodeAST *node) = 0;
-    virtual ReturnValue visitForValueFunctionBodyNode(FunctionBodyNodeAST *node) = 0;
-    virtual ReturnValue visitForValueFunctionPrototypeNode(FunctionPrototypeNodeAST *node) = 0;
-    virtual ReturnValue visitForValueFunctionDefinitionNode(FunctionDefinitionNodeAST *node) = 0;
-    virtual ReturnValue visitForValueNumberNode(NumberNodeAST *node) = 0;
-    virtual ReturnValue visitForValueReferenceNode(ReferenceNodeAST *node) = 0;
+    virtual ReturnValue visitForValueBinaryOperatorNode(const BinaryOperatorNodeAST *node) = 0;
+    virtual ReturnValue visitForValueCallNode(const CallNodeAST *node) = 0;
+    virtual ReturnValue visitForValueFileNode(const FileNodeAST *node) = 0;
+    virtual ReturnValue visitForValueFunctionBodyNode(const FunctionBodyNodeAST *node) = 0;
+    virtual ReturnValue visitForValueFunctionPrototypeNode(const FunctionPrototypeNodeAST *node) = 0;
+    virtual ReturnValue visitForValueFunctionDefinitionNode(const FunctionDefinitionNodeAST *node) = 0;
+    virtual ReturnValue visitForValueNumberNode(const NumberNodeAST *node) = 0;
+    virtual ReturnValue visitForValueReferenceNode(const ReferenceNodeAST *node) = 0;
 
-    void visitBinaryOperatorNode(BinaryOperatorNodeAST *node) override {
+    void visitBinaryOperatorNode(const BinaryOperatorNodeAST *node) override {
         value = visitForValueBinaryOperatorNode(node);
     }
 
-    void visitCallNode(CallNodeAST *node) override {
+    void visitCallNode(const CallNodeAST *node) override {
         value = visitForValueCallNode(node);
     }
 
-    void visitFileNode(FileNodeAST *node) override {
+    void visitFileNode(const FileNodeAST *node) override {
         value = visitForValueFileNode(node);
     }
 
-    void visitFunctionBodyNode(FunctionBodyNodeAST *node) override {
+    void visitFunctionBodyNode(const FunctionBodyNodeAST *node) override {
         value = visitForValueFunctionBodyNode(node);
     }
 
-    void visitFunctionPrototypeNode(FunctionPrototypeNodeAST *node) override {
+    void visitFunctionPrototypeNode(const FunctionPrototypeNodeAST *node) override {
         value = visitForValueFunctionPrototypeNode(node);
     }
 
-    void visitFunctionDefinitionNode(FunctionDefinitionNodeAST *node) override {
+    void visitFunctionDefinitionNode(const FunctionDefinitionNodeAST *node) override {
         value = visitForValueFunctionDefinitionNode(node);
     }
 
-    void visitNumberNode(NumberNodeAST *node) override {
+    void visitNumberNode(const NumberNodeAST *node) override {
         value = visitForValueNumberNode(node);
     }
 
-    void visitReferenceNode(ReferenceNodeAST *node) override {
+    void visitReferenceNode(const ReferenceNodeAST *node) override {
         value = visitForValueReferenceNode(node);
     };
 };

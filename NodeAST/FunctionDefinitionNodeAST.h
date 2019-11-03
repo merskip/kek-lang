@@ -11,27 +11,16 @@
 #include "FunctionPrototypeNodeAST.h"
 #include "FunctionBodyNodeAST.h"
 
-class FunctionDefinitionNodeAST: public NodeAST {
+struct FunctionDefinitionNodeAST: public NodeAST {
 
-private:
     std::unique_ptr<FunctionPrototypeNodeAST> prototype;
     std::unique_ptr<FunctionBodyNodeAST> body;
 
-public:
     FunctionDefinitionNodeAST(std::unique_ptr<FunctionPrototypeNodeAST> &prototype,
                               std::unique_ptr<FunctionBodyNodeAST> &body)
-            : prototype(std::move(prototype)), body(std::move(body)) {
-    }
+            : prototype(std::move(prototype)), body(std::move(body)) {}
 
-    [[nodiscard]] const std::unique_ptr<FunctionPrototypeNodeAST> &getPrototype() const {
-        return prototype;
-    }
-
-    [[nodiscard]] const std::unique_ptr<FunctionBodyNodeAST> &getBody() const {
-        return body;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitFunctionDefinitionNode(this);
     }
 };

@@ -9,21 +9,14 @@
 #include <utility>
 #include "NodeAST.h"
 
-class FunctionBodyNodeAST : public NodeAST {
+struct FunctionBodyNodeAST : public NodeAST {
 
-private:
     std::vector<std::unique_ptr<NodeAST>> nodes;
 
-public:
-    explicit FunctionBodyNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
-            : nodes(std::move(nodes)) {
-    }
+    FunctionBodyNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
+            : nodes(std::move(nodes)) {}
 
-    [[nodiscard]] const std::vector<std::unique_ptr<NodeAST>> &getNodes() const {
-        return nodes;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitFunctionBodyNode(this);
     }
 };

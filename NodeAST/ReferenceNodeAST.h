@@ -6,20 +6,13 @@
 
 #include "NodeAST.h"
 
-class ReferenceNodeAST: public NodeAST {
+struct ReferenceNodeAST: public NodeAST {
 
-private:
     std::string name;
 
-public:
-    explicit ReferenceNodeAST(std::string &name) : name(name) {
-    }
+    ReferenceNodeAST(std::string &name) : name(name) {}
 
-    [[nodiscard]] const std::string &getName() const {
-        return name;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitReferenceNode(this);
     }
 };

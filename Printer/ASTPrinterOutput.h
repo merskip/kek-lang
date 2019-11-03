@@ -18,7 +18,7 @@ public:
     void print(const std::string &tag, const std::map<std::string, std::string> &attributes = {});
 
     void printChildNode(NodeASTVisitor *visitor,
-                        NodeAST &node, const std::string &tag = "",
+                        const NodeAST *node, const std::string &tag = "",
                         const std::map<std::string, std::string> &attributes = {});
 
     std::string getOutput();

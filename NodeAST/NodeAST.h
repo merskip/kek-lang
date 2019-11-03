@@ -12,13 +12,12 @@
 #include "../Utilities/NodeASTVisitor.h"
 #include "../Utilities/NodeASTValueVisitor.h"
 
-class NodeAST {
+struct NodeAST {
 
-public:
-    virtual void accept(NodeASTVisitor *visitor) = 0;
+    virtual void accept(NodeASTVisitor *visitor) const = 0;
 
     template<typename ReturnValue>
-    ReturnValue acceptForValue(NodeASTValueVisitor<ReturnValue> *valueVisitor) {
+    ReturnValue acceptForValue(NodeASTValueVisitor<ReturnValue> *valueVisitor) const {
         accept(valueVisitor);
         return valueVisitor->getValue();
     }

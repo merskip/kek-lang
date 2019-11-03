@@ -11,26 +11,15 @@
 #include <llvm/IR/IRBuilder.h>
 #include "NodeAST.h"
 
-class CallNodeAST : public NodeAST {
+struct CallNodeAST : public NodeAST {
 
-private:
     std::string callee;
     std::vector<std::unique_ptr<NodeAST>> arguments;
 
-public:
     CallNodeAST(std::string &callee, std::vector<std::unique_ptr<NodeAST>> &arguments)
-            : callee(callee), arguments(std::move(arguments)) {
-    }
+            : callee(callee), arguments(std::move(arguments)) {}
 
-    [[nodiscard]] const std::string &getCallee() const {
-        return callee;
-    }
-
-    [[nodiscard]] const std::vector<std::unique_ptr<NodeAST>> &getArguments() const {
-        return arguments;
-    }
-
-    void accept(NodeASTVisitor *visitor) override {
+    void accept(NodeASTVisitor *visitor) const override {
         visitor->visitCallNode(this);
     }
 };
