@@ -4,10 +4,8 @@ project(kek_lang)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(LLVM REQUIRED CONFIG)
-
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
@@ -15,7 +13,6 @@ add_executable(
         kek_lang
         main.cpp
         Tokenizer.cpp
-        Console.cpp
         NodeAST.h
         NodeAST/NodeAST.h
         NodeAST/NumberNodeAST.h
@@ -35,6 +32,10 @@ add_executable(
         Printer/ASTPrinter.h
         Printer/ASTPrinter.cpp
         Printer/ASTPrinterOutput.cpp
-        Printer/ASTPrinterOutput.h)
+        Printer/ASTPrinterOutput.h
+        Utilities/Console.h
+        Utilities/Console.cpp
+        Utilities/Arguments.h
+        Utilities/Arguments.cpp)
 
 target_link_libraries(kek_lang LLVM)
