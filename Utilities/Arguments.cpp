@@ -4,7 +4,8 @@
 
 #include "Arguments.h"
 
-Arguments::Arguments(int argc, char **argv) {
+void Arguments::initialize(int argc, char **argv) {
+    args.clear();
     for (int i = 0; i < argc; i++) {
         args.emplace_back(argv[i]);
     }

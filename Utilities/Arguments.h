@@ -16,10 +16,12 @@ private:
     std::list<std::string> args;
 
 public:
-    Arguments(int argc, char *argv[]);
+    void initialize(int argc, char *argv[]);
 
     bool isFlag(const std::string &flag);
 
     std::optional<std::string> getOption(const std::string &option);
+
 };
 
+static Arguments arguments;

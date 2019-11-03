@@ -8,36 +8,36 @@
 #include "Printer/ASTPrinter.h"
 #include "Utilities/Arguments.h"
 
-void parse(const std::string &text, Arguments &arguments, Console *console);
-void compileFile(const std::string &filename, Arguments &arguments);
-void runConsole(Arguments &arguments);
+void parse(const std::string &text, Console *console);
+void compileFile(const std::string &filename);
+void runConsole();
 
 int main(int argc, char *argv[]) {
-    auto arguments = Arguments(argc, argv);
+    arguments.initialize(argc, argv);
 
     auto inputFile = arguments.getOption("-i");
     if (inputFile.has_value())
-        compileFile(*inputFile, arguments);
+        compileFile(*inputFile);
     else
-        runConsole(arguments);
+        runConsole();
 
     return 0;
 }
 
-void compileFile(const std::string &filename, Arguments &arguments) {
+void compileFile(const std::string &filename) {
     std::ifstream file(filename);
     std::stringstream fileStream;
     fileStream << file.rdbuf();
     std::string fileContent = fileStream.str();
 
-    parse(fileContent, arguments, nullptr);
+    parse(fileContent, nullptr);
 }
 
-void runConsole(Arguments &arguments) {
+void runConsole() {
     auto console = Console("kek-lang> ");
     console.begin([&](const std::string &inputText) {
         try {
-            parse(inputText, arguments, &console);
+            parse(inputText, &console);
         }
         catch (ParsingException &e) {
             console.printMarker(e.getOffset());
@@ -46,7 +46,7 @@ void runConsole(Arguments &arguments) {
     });
 }
 
-void parse(const std::string &text, Arguments &arguments, Console *console) {
+void parse(const std::string &text, Console *console) {
     Tokenizer tokenizer(text);
     auto tokens = tokenizer.getTokens();
     if (arguments.isFlag("-dump-tokens")) {
