@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "Tokenizer.h"
+#include "Lexer/Lexer.h"
 #include "ParsingException.h"
 #include "Utilities/Console.h"
 #include "NodeASTParser.h"
@@ -47,7 +47,7 @@ void runConsole() {
 }
 
 void parse(const std::string &text, Console *console) {
-    Tokenizer tokenizer(text);
+    Lexer tokenizer(text);
     auto tokens = tokenizer.getTokens();
     if (arguments.isFlag("-dump-tokens")) {
         for (const auto &token : tokens) {

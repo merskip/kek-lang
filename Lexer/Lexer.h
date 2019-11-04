@@ -10,7 +10,7 @@
 #include <vector>
 #include "Token.h"
 
-class Tokenizer {
+class Lexer {
 
 private:
     const std::string &text;
@@ -18,7 +18,7 @@ private:
     std::vector<char> operators;
 
 public:
-    explicit Tokenizer(const std::string &text)
+    explicit Lexer(const std::string &text)
             : text(text) {
         addOperator('+');
         addOperator('-');
@@ -32,9 +32,9 @@ public:
 
     std::list<Token> getTokens();
 
+private:
     Token getNextToken();
 
-private:
     Token createToken(std::string &tokenText, Token::Type type, double numberValue = NAN);
 
     char getNextCharOrEOF();

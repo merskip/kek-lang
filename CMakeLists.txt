@@ -12,7 +12,7 @@ add_definitions(${LLVM_DEFINITIONS})
 add_executable(
         kek_lang
         main.cpp
-        Tokenizer.cpp
+        Lexer/Lexer.cpp
         NodeAST.h
         NodeAST/NodeAST.h
         NodeAST/NumberNodeAST.h

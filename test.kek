@@ -1,7 +1,0 @@
-func getSomeValue() {
-    2 + 3
-}
-
-func myFunc1(arg1, arg2) {
-    (getSomeValue() + arg1) * arg2
-}

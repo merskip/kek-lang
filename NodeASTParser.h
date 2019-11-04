@@ -8,7 +8,7 @@
 #include <list>
 #include <memory>
 #include <functional>
-#include "Token.h"
+#include "Lexer/Token.h"
 #include "NodeAST/NodeAST.h"
 #include "NodeAST/NumberNodeAST.h"
 #include "NodeAST/ReferenceNodeAST.h"

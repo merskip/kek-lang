@@ -3,10 +3,10 @@
 //
 
 #include <algorithm>
-#include "Tokenizer.h"
-#include "ParsingException.h"
+#include "Lexer.h"
+#include "../ParsingException.h"
 
-std::list<Token> Tokenizer::getTokens() {
+std::list<Token> Lexer::getTokens() {
     std::list<Token> tokens;
     while (true) {
         Token token = getNextToken();
@@ -18,7 +18,7 @@ std::list<Token> Tokenizer::getTokens() {
     return tokens;
 }
 
-Token Tokenizer::getNextToken() {
+Token Lexer::getNextToken() {
     char currentChar = getNextCharOrEOF();
 
     // Skip whitespaces
@@ -82,7 +82,7 @@ Token Tokenizer::getNextToken() {
     }
 }
 
-Token Tokenizer::createToken(std::string &tokenText, Token::Type type, double numberValue) {
+Token Lexer::createToken(std::string &tokenText, Token::Type type, double numberValue) {
     return Token{
             .text = tokenText,
             .offset = currentOffset - (long) tokenText.size() + 1,
@@ -91,7 +91,7 @@ Token Tokenizer::createToken(std::string &tokenText, Token::Type type, double nu
     };
 }
 
-char Tokenizer::getNextCharOrEOF() {
+char Lexer::getNextCharOrEOF() {
     currentOffset++;
     if (currentOffset < this->text.size())
         return this->text[currentOffset];
@@ -99,10 +99,10 @@ char Tokenizer::getNextCharOrEOF() {
         return EOF;
 }
 
-void Tokenizer::backToPreviousChar() {
+void Lexer::backToPreviousChar() {
     currentOffset--;
 }
 
-bool Tokenizer::containsOperator(char op) {
+bool Lexer::containsOperator(char op) {
     return std::find(operators.begin(), operators.end(), op) != operators.end();
 }
