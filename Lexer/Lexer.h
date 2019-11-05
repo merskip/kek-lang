@@ -7,6 +7,7 @@
 #include <string>
 #include <cmath>
 #include <list>
+#include <utility>
 #include <vector>
 #include "Token.h"
 
@@ -15,19 +16,11 @@ class Lexer {
 private:
     const std::string &text;
     long currentOffset = -1;
-    std::vector<char> operators;
+    const std::vector<OperatorDefinition> &operators;
 
 public:
-    explicit Lexer(const std::string &text)
-            : text(text) {
-        addOperator('+');
-        addOperator('-');
-        addOperator('/');
-        addOperator('*');
-    }
-
-    void addOperator(char op) {
-        operators.push_back(op);
+    explicit Lexer(const std::string &text, const std::vector<OperatorDefinition> &operators)
+            : text(text), operators(operators) {
     }
 
     std::list<Token> getTokens();
@@ -35,11 +28,15 @@ public:
 private:
     Token getNextToken();
 
-    Token createToken(std::string &tokenText, Token::Type type, double numberValue = NAN);
+    Token createToken(std::string &tokenText, Token::Type type);
+
+    Token createTokenNumber(std::string &tokenText, double numberValue);
+
+    Token createTokenOperator(std::string &tokenText, const OperatorDefinition &operatorDefinition);
 
     char getNextCharOrEOF();
 
     void backToPreviousChar();
 
-    bool containsOperator(char op);
+    std::optional<OperatorDefinition> findOperator(const std::string &symbol);
 };

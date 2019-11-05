@@ -25,7 +25,7 @@ std::unique_ptr<NodeAST> NodeASTParser::parseToken(int minPrecedence) {
     if (moveToNextIf([&](Token &nextToken) {
         if (nextToken.type != Token::Operator)
             return false;
-        auto precedence = operatorsPrecedence[nextToken.text];
+        auto precedence = nextToken.operatorDefinition.value().precedence;
         return precedence > minPrecedence;
     })) {
         return parseOperator(std::move(parsedNode));
@@ -57,7 +57,7 @@ std::unique_ptr<NodeAST> NodeASTParser::parseCurrentToken() {
 
 std::unique_ptr<BinaryOperatorNodeAST> NodeASTParser::parseOperator(std::unique_ptr<NodeAST> lhs) {
     auto operatorText = currentToken.text;
-    auto precedence = operatorsPrecedence[operatorText];
+    auto precedence = currentToken.operatorDefinition.value().precedence;
 
     moveToNextToken();
     auto rhs = parseToken(precedence);

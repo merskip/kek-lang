@@ -39,6 +39,8 @@ add_executable(
         Compiler/LLVMCompiler.cpp
         Compiler/LLVMCompiler.h
         Compiler/VariablesScope.cpp
-        Compiler/VariablesScope.h)
+        Compiler/VariablesScope.h
+        Lexer/OperatorDefinition.h
+        BuiltinTypes.h)
 
 target_link_libraries(kek_lang LLVM)

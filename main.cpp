@@ -7,6 +7,7 @@
 #include "Printer/ASTPrinter.h"
 #include "Utilities/Arguments.h"
 #include "Compiler/LLVMCompiler.h"
+#include "BuiltinTypes.h"
 
 void parse(const std::string &text, Console *console);
 void compileFile(const std::string &filename);
@@ -47,8 +48,9 @@ void runConsole() {
 }
 
 void parse(const std::string &text, Console *console) {
-    Lexer tokenizer(text);
+    Lexer tokenizer(text, builtin::operators);
     auto tokens = tokenizer.getTokens();
+
     if (arguments.isFlag("-dump-tokens")) {
         for (const auto &token : tokens) {
             if (console != nullptr)

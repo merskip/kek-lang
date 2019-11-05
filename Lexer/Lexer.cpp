@@ -54,7 +54,7 @@ Token Lexer::getNextToken() {
         } while (isdigit(currentChar = getNextCharOrEOF()) || currentChar == '.');
         backToPreviousChar();
 
-        return createToken(numberText, Token::Type::Number, std::stod(numberText));
+        return createTokenNumber(numberText, std::stod(numberText));
     } else if (currentChar == '#') {
         do {
             currentChar = getNextCharOrEOF();
@@ -73,21 +73,45 @@ Token Lexer::getNextToken() {
         return createToken(currentCharStr, Token::Type::Comma);
     } else if (currentChar == ';') {
         return createToken(currentCharStr, Token::Type::Semicolon);
-    } else if (containsOperator(currentChar)) {
-        return createToken(currentCharStr, Token::Type::Operator);
     } else if (currentChar == EOF) {
         return createToken(currentCharStr, Token::Type::Eof);
+    }
+
+    auto operatorDefinition = findOperator(currentCharStr);
+    if (operatorDefinition.has_value()) {
+        return createTokenOperator(currentCharStr, *operatorDefinition);
     } else {
         throw ParsingException(currentOffset, "Unexpected " + std::string(1, currentChar));
     }
 }
 
-Token Lexer::createToken(std::string &tokenText, Token::Type type, double numberValue) {
+Token Lexer::createToken(std::string &tokenText, Token::Type type) {
     return Token{
             .text = tokenText,
             .offset = currentOffset - (long) tokenText.size() + 1,
             .type = type,
-            .numberValue = numberValue
+            .numberValue = NAN,
+            .operatorDefinition = std::nullopt
+    };
+}
+
+Token Lexer::createTokenNumber(std::string &tokenText, double numberValue) {
+    return Token{
+            .text = tokenText,
+            .offset = currentOffset - (long) tokenText.size() + 1,
+            .type = Token::Type::Number,
+            .numberValue = numberValue,
+            .operatorDefinition = std::nullopt
+    };
+}
+
+Token Lexer::createTokenOperator(std::string &tokenText, const OperatorDefinition &operatorDefinition) {
+    return Token{
+            .text = tokenText,
+            .offset = currentOffset - (long) tokenText.size() + 1,
+            .type = Token::Type::Operator,
+            .numberValue = NAN,
+            .operatorDefinition = operatorDefinition
     };
 }
 
@@ -103,6 +127,10 @@ void Lexer::backToPreviousChar() {
     currentOffset--;
 }
 
-bool Lexer::containsOperator(char op) {
-    return std::find(operators.begin(), operators.end(), op) != operators.end();
+std::optional<OperatorDefinition> Lexer::findOperator(const std::string &symbol) {
+    for (const auto &op : operators) {
+        if (op.symbol == symbol)
+            return op;
+    }
+    return std::nullopt;
 }

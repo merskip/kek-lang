@@ -25,19 +25,9 @@ private:
     Token &currentToken;
     std::vector<std::unique_ptr<NodeAST>> parsedNodes;
 
-    std::map<std::string, int> operatorsPrecedence;
-
 public:
     explicit NodeASTParser(std::list<Token> &tokens)
             : tokens(tokens), currentToken(*tokens.begin()) {
-        addOperatorPrecedence("+", 100);
-        addOperatorPrecedence("-", 100);
-        addOperatorPrecedence("*", 500);
-        addOperatorPrecedence("/", 500);
-    }
-
-    void addOperatorPrecedence(const std::string &operatorText, int precedence) {
-        operatorsPrecedence[operatorText] = precedence;
     }
 
     std::unique_ptr<FileNodeAST> parse();

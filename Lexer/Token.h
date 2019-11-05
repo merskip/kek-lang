@@ -6,6 +6,8 @@
 
 #include <string>
 #include <ostream>
+#include <optional>
+#include "OperatorDefinition.h"
 
 struct Token {
     std::string text;
@@ -24,6 +26,7 @@ struct Token {
         Semicolon
     } type;
     double numberValue;
+    std::optional<OperatorDefinition> operatorDefinition;
 
     friend std::ostream &operator<<(std::ostream &os, const Token &token) {
         if (token.type != Type::Eof)
