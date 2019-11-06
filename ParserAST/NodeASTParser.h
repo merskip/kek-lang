@@ -8,14 +8,14 @@
 #include <list>
 #include <memory>
 #include <functional>
-#include "Lexer/Token.h"
-#include "NodeAST/NodeAST.h"
-#include "NodeAST/NumberNodeAST.h"
-#include "NodeAST/ReferenceNodeAST.h"
-#include "NodeAST/CallNodeAST.h"
-#include "NodeAST/FunctionDefinitionNodeAST.h"
-#include "NodeAST/FileNodeAST.h"
-#include "NodeAST/BinaryOperatorNodeAST.h"
+#include "../Lexer/Token.h"
+#include "../NodeAST/NodeAST.h"
+#include "../NodeAST/NumberNodeAST.h"
+#include "../NodeAST/ReferenceNodeAST.h"
+#include "../NodeAST/CallNodeAST.h"
+#include "../NodeAST/FunctionDefinitionNodeAST.h"
+#include "../NodeAST/FileNodeAST.h"
+#include "../NodeAST/BinaryOperatorNodeAST.h"
 
 class NodeASTParser {
 

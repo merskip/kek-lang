@@ -3,7 +3,7 @@
 //
 
 #include "LLVMCompiler.h"
-#include "../NodeAST.h"
+#include "../NodeAST/all.h"
 #include <llvm/Support/raw_ostream.h>
 
 

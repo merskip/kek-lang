@@ -3,9 +3,9 @@
 //
 
 #include "NodeASTParser.h"
-#include "ParsingException.h"
-#include "NodeAST/FileNodeAST.h"
-#include "NodeAST/FunctionBodyNodeAST.h"
+#include "../Utilities/ParsingException.h"
+#include "../NodeAST/FileNodeAST.h"
+#include "../NodeAST/FunctionBodyNodeAST.h"
 
 #include <memory>
 

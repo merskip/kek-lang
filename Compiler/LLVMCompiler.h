@@ -5,6 +5,9 @@
 #pragma once
 
 #include <list>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Module.h>
+#include <llvm/IR/IRBuilder.h>
 #include "../NodeAST/FileNodeAST.h"
 #include "VariablesScope.h"
 

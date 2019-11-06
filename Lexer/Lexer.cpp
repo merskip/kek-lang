@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include "Lexer.h"
-#include "../ParsingException.h"
+#include "../Utilities/ParsingException.h"
 
 std::list<Token> Lexer::getTokens() {
     std::list<Token> tokens;

@@ -3,7 +3,7 @@
 //
 
 #include "ASTPrinter.h"
-#include "../NodeAST.h"
+#include "../NodeAST/all.h"
 
 std::string ASTPrinter::print(const NodeAST *node) {
     output = std::make_unique<ASTPrinterOutput>();

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include "Lexer/Lexer.h"
-#include "ParsingException.h"
+#include "Utilities/ParsingException.h"
 #include "Utilities/Console.h"
-#include "NodeASTParser.h"
+#include "ParserAST/NodeASTParser.h"
 #include "Printer/ASTPrinter.h"
 #include "Utilities/Arguments.h"
 #include "Compiler/LLVMCompiler.h"

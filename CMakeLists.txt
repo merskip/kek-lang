@@ -12,8 +12,7 @@ add_definitions(${LLVM_DEFINITIONS})
 add_executable(
         kek_lang
         main.cpp
-        Lexer/Lexer.cpp
-        NodeAST.h
+        NodeAST/all.h
         NodeAST/NodeAST.h
         NodeAST/NumberNodeAST.h
         NodeAST/NumberNodeAST.h
@@ -23,15 +22,15 @@ add_executable(
         NodeAST/FunctionPrototypeNodeAST.h
         NodeAST/FunctionDefinitionNodeAST.h
         NodeAST/FileNodeAST.h
-        NodeASTParser.cpp
-        NodeASTParser.h
         NodeAST/FunctionBodyNodeAST.h
-        Utilities/NodeASTVisitor.h
-        Utilities/NodeASTValueVisitor.h
+        ParserAST/NodeASTParser.cpp
+        ParserAST/NodeASTParser.h
         Printer/ASTPrinter.h
         Printer/ASTPrinter.cpp
         Printer/ASTPrinterOutput.cpp
         Printer/ASTPrinterOutput.h
+        Utilities/NodeASTVisitor.h
+        Utilities/NodeASTValueVisitor.h
         Utilities/Console.h
         Utilities/Console.cpp
         Utilities/Arguments.h
@@ -40,6 +39,8 @@ add_executable(
         Compiler/LLVMCompiler.h
         Compiler/VariablesScope.cpp
         Compiler/VariablesScope.h
+        Lexer/Lexer.cpp
+        Lexer/Lexer.h
         Lexer/OperatorDefinition.h
         BuiltinTypes.h)
 
