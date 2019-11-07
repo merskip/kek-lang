@@ -26,7 +26,7 @@ Token Lexer::getNextToken() {
         currentChar = getNextCharOrEOF();
     std::string currentCharStr(1, currentChar);
 
-    if (isalpha(currentChar)) { // [a-Z][a-Z0-9]*
+    if (isalpha(currentChar) || currentChar == '_') { // [_a-Z][_a-Z0-9]*
         std::string identifierText;
 
         do {
