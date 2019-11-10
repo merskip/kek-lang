@@ -35,6 +35,9 @@ private:
     llvm::Value *visitForValueNumberNode(const NumberNodeAST *node) override;
     llvm::Value *visitForValueReferenceNode(const ReferenceNodeAST *node) override;
 
+    llvm::InlineAsm *syscall();
+    llvm::InlineAsm *haltAsm();
+
     void enterScope(const std::function<void(void)> &inScope);
     void addVariable(const std::string &name, llvm::Value *value);
     llvm::Value *getVariable(const std::string &name);

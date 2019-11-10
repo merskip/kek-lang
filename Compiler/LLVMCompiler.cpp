@@ -14,6 +14,8 @@
 #include <llvm/Support/ToolOutputFile.h>
 #include <llvm/Support/FileSystem.h>
 #include <llvm/IR/Verifier.h>
+#include "llvm/CodeGen/MachineBasicBlock.h"
+#include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include <iostream>
 
 LLVMCompiler::LLVMCompiler(const std::string &moduleId)
@@ -51,6 +53,7 @@ void LLVMCompiler::compile(FileNodeAST *node) {
 
     legacy::PassManager pass;
     targetMachine->addPassesToEmitFile(pass, *outputStream, nullptr, TargetMachine::CGFT_ObjectFile);
+    llvm::verifyModule(module);
     pass.run(module);
     outputStream->flush();
     outputFile->keep();
@@ -109,6 +112,9 @@ llvm::Value *LLVMCompiler::visitForValueFunctionBodyNode(const FunctionBodyNodeA
 llvm::Value *LLVMCompiler::visitForValueFunctionPrototypeNode(const FunctionPrototypeNodeAST *node) {
     std::vector<llvm::Type *> argumentsTypes(node->arguments.size(), llvm::Type::getDoubleTy(context));
     llvm::FunctionType *functionType = llvm::FunctionType::get(llvm::Type::getDoubleTy(context), argumentsTypes, false);
+    if (node->name == "__start")
+        functionType = llvm::FunctionType::get(llvm::Type::getVoidTy(context), false);
+
     llvm::Function *function = llvm::Function::Create(functionType, llvm::Function::ExternalLinkage, node->name, &module);
 
     int index = 0;
@@ -124,7 +130,7 @@ llvm::Value *LLVMCompiler::visitForValueFunctionDefinitionNode(const FunctionDef
     llvm::Function *function = module.getFunction(node->prototype->name);
     if (function)
         throw "Function " + node->prototype->name + " cannot be redefined";
-    function = (llvm::Function *)(node->prototype->acceptForValue(this));
+    function = (llvm::Function *) (node->prototype->acceptForValue(this));
 
     llvm::BasicBlock *implBlock = llvm::BasicBlock::Create(context, "implementation", function);
     builder.SetInsertPoint(implBlock);
@@ -137,7 +143,15 @@ llvm::Value *LLVMCompiler::visitForValueFunctionDefinitionNode(const FunctionDef
         }
         returnValue = node->body->acceptForValue(this);
     });
-    builder.CreateRet(returnValue);
+    if (function->getName() == "_start") {
+        FunctionType *syscallType = FunctionType::get(Type::getVoidTy(context), false);
+        InlineAsm *syscallAsm = llvm::InlineAsm::get(syscallType, "mov $$0, %rdi;mov $$60, %rax;syscall", "~{rdi},~{rax}", true);
+        builder.CreateCall(syscallAsm);
+        builder.CreateUnreachable();
+    }
+    else {
+        builder.CreateRet(returnValue);
+    }
     return function;
 }
 
