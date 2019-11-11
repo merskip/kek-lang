@@ -8,10 +8,12 @@
 #include "Utilities/Arguments.h"
 #include "Compiler/LLVMCompiler.h"
 #include "BuiltinTypes.h"
+#include "Compiler/BackendCompiler.h"
 
-void parse(const std::string &text, Console *console);
+void parse(const std::string &text, Console *console, const std::optional<std::string> &filename);
 void compileFile(const std::string &filename);
 void runConsole();
+std::string replaceExtension(const std::string &filename, const std::string &newExtension);
 
 int main(int argc, char *argv[]) {
     arguments.initialize(argc, argv);
@@ -31,14 +33,15 @@ void compileFile(const std::string &filename) {
     fileStream << file.rdbuf();
     std::string fileContent = fileStream.str();
 
-    parse(fileContent, nullptr);
+    std::string outputFilename = replaceExtension(filename, "o");
+    parse(fileContent, nullptr, outputFilename);
 }
 
 void runConsole() {
     auto console = Console("kek-lang> ");
     console.begin([&](const std::string &inputText) {
         try {
-            parse(inputText, &console);
+            parse(inputText, &console, std::nullopt);
         }
         catch (ParsingException &e) {
             console.printMarker(e.getOffset());
@@ -47,7 +50,7 @@ void runConsole() {
     });
 }
 
-void parse(const std::string &text, Console *console) {
+void parse(const std::string &text, Console *console, const std::optional<std::string> &filename) {
     Lexer tokenizer(text, builtin::operators);
     auto tokens = tokenizer.getTokens();
 
@@ -67,6 +70,24 @@ void parse(const std::string &text, Console *console) {
         std::cout << printer.print(rootNode.get()) << std::endl;
     }
 
-    LLVMCompiler compiler("kek-lang");
-    compiler.compile(rootNode.get());
+    LLVMCompiler llvmCompiler("kek-lang");
+    llvmCompiler.compile(rootNode.get());
+
+    auto module = llvmCompiler.getModule();
+    if (arguments.isFlag("-dump-llvm-ir"))
+        module->print(llvm::outs(), nullptr);
+
+    BackendCompiler backendCompiler;
+    backendCompiler.run(llvmCompiler.getModule(), filename.value_or("kek-console.o"));
+}
+
+std::string replaceExtension(const std::string &filename, const std::string &newExtension) {
+    std::string::size_type indexOfDot = filename.find_last_of('.');
+    std::string basename;
+    if (indexOfDot != std::string::npos) {
+        basename = filename.substr(0, indexOfDot);
+    } else {
+        basename = filename;
+    }
+    return basename + "." + newExtension;
 }

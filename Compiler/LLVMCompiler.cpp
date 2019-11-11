@@ -5,18 +5,12 @@
 #include "LLVMCompiler.h"
 #include "../NodeAST/all.h"
 #include <llvm/Support/raw_ostream.h>
-#include <llvm/Support/TargetSelect.h>
 #include <llvm/Target/TargetMachine.h>
-#include <llvm/Support/TargetRegistry.h>
-#include <llvm/IR/LegacyPassManager.h>
 #include <llvm/CodeGen/CommandFlags.inc>
-#include <llvm/CodeGen/MachineModuleInfo.h>
-#include <llvm/Support/ToolOutputFile.h>
 #include <llvm/Support/FileSystem.h>
 #include <llvm/IR/Verifier.h>
 #include "llvm/CodeGen/MachineBasicBlock.h"
-#include "llvm/Transforms/Utils/BasicBlockUtils.h"
-#include <iostream>
+#include "../Utilities/Arguments.h"
 
 LLVMCompiler::LLVMCompiler(const std::string &moduleId)
         : context(llvm::LLVMContext()),
@@ -28,35 +22,7 @@ void LLVMCompiler::compile(FileNodeAST *node) {
     enterScope([&] { // Global scope
         node->acceptForValue(this);
     });
-    module.print(llvm::outs(), nullptr);
-
-    llvm::InitializeAllTargetInfos();
-    llvm::InitializeAllTargets();
-    llvm::InitializeAllTargetMCs();
-    llvm::InitializeAllAsmParsers();
-    llvm::InitializeAllAsmPrinters();
-
-    auto targetTriple = llvm::sys::getDefaultTargetTriple();
-    module.setTargetTriple(targetTriple);
-    std::string err;
-    auto target = TargetRegistry::lookupTarget(targetTriple, err);
-
-
-    TargetOptions opt;
-    auto relocModel = Optional<Reloc::Model>();
-    auto targetMachine = target->createTargetMachine(module.getTargetTriple(), "generic", "", opt, relocModel);
-    module.setDataLayout(targetMachine->createDataLayout());
-
-    std::error_code errFile;
-    std::unique_ptr<llvm::ToolOutputFile> outputFile = std::make_unique<ToolOutputFile>("kek.o", errFile, sys::fs::OF_Text);
-    raw_pwrite_stream *outputStream = &outputFile->os();
-
-    legacy::PassManager pass;
-    targetMachine->addPassesToEmitFile(pass, *outputStream, nullptr, TargetMachine::CGFT_ObjectFile);
     llvm::verifyModule(module);
-    pass.run(module);
-    outputStream->flush();
-    outputFile->keep();
 }
 
 llvm::Value *LLVMCompiler::visitForValueBinaryOperatorNode(const BinaryOperatorNodeAST *node) {

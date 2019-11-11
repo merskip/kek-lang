@@ -39,6 +39,8 @@ add_executable(
         Compiler/LLVMCompiler.h
         Compiler/VariablesScope.cpp
         Compiler/VariablesScope.h
+        Compiler/BackendCompiler.cpp
+        Compiler/BackendCompiler.h
         Lexer/Lexer.cpp
         Lexer/Lexer.h
         Lexer/OperatorDefinition.h
