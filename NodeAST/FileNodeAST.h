@@ -14,8 +14,8 @@ struct FileNodeAST : public NodeAST {
 
     std::vector<std::unique_ptr<NodeAST>> nodes;
 
-    FileNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
-            : nodes(std::move(nodes)) {
+    FileNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes, SourceLocation location)
+            : nodes(std::move(nodes)), NodeAST(location) {
     }
 
     void accept(NodeASTVisitor *visitor) const override {

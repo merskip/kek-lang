@@ -17,7 +17,7 @@ std::unique_ptr<FileNodeAST> NodeASTParser::parse() {
         if (parsedToken)
             parsedNodes.push_back(std::move(parsedToken));
     } while (existsNextToken());
-    return std::make_unique<FileNodeAST>(FileNodeAST(parsedNodes));
+    return std::make_unique<FileNodeAST>(FileNodeAST(parsedNodes, SourceLocation(0, currentOffset)));
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseToken(int minPrecedence) {
@@ -61,7 +61,7 @@ std::unique_ptr<BinaryOperatorNodeAST> NodeASTParser::parseOperator(std::unique_
 
     moveToNextToken();
     auto rhs = parseToken(precedence);
-    return std::make_unique<BinaryOperatorNodeAST>(BinaryOperatorNodeAST(operatorText, lhs, rhs));
+    return std::make_unique<BinaryOperatorNodeAST>(BinaryOperatorNodeAST(operatorText, lhs, rhs, currentToken.getSourceLocation()));
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
@@ -78,7 +78,7 @@ std::unique_ptr<NodeAST> NodeASTParser::parseParentheses() {
 }
 
 std::unique_ptr<NumberNodeAST> NodeASTParser::parseNumber() {
-    return std::make_unique<NumberNodeAST>(currentToken.numberValue);
+    return std::make_unique<NumberNodeAST>(currentToken.numberValue, currentToken.getSourceLocation());
 }
 
 std::unique_ptr<NodeAST> NodeASTParser::parseReferenceOrCall() {
@@ -94,12 +94,13 @@ bool NodeASTParser::isCallNode() {
 }
 
 std::unique_ptr<ReferenceNodeAST> NodeASTParser::parseReference() {
-    return std::make_unique<ReferenceNodeAST>(ReferenceNodeAST(currentToken.text));
+    return std::make_unique<ReferenceNodeAST>(ReferenceNodeAST(currentToken.text, currentToken.getSourceLocation()));
 }
 
 std::unique_ptr<CallNodeAST> NodeASTParser::parseCall() {
     auto callee = currentToken.text;
     moveToNextToken(); // Consume (
+    auto sourceLocation = currentToken.getSourceLocation();
 
     std::vector<std::unique_ptr<NodeAST>> arguments;
     while (true) {
@@ -117,15 +118,17 @@ std::unique_ptr<CallNodeAST> NodeASTParser::parseCall() {
             throw ParsingException(currentOffset, "Expected , or )");
     }
 
-    return std::make_unique<CallNodeAST>(CallNodeAST(callee, arguments));
+    return std::make_unique<CallNodeAST>(CallNodeAST(callee, arguments, sourceLocation));
 }
 
 std::unique_ptr<FunctionDefinitionNodeAST> NodeASTParser::parseFunctionDefinition() {
+    auto definitionSourceLocation = currentToken.getSourceLocation();
     auto prototype = parseFunctionPrototype();
 
     moveToNextToken();
     if (currentToken.type != Token::Type::LeftBracket)
         throw ParsingException(currentOffset, "Expected {");
+    auto bodySourceLocation = currentToken.getSourceLocation();
 
     std::vector<std::unique_ptr<NodeAST>> nodes;
     while (true) {
@@ -143,11 +146,12 @@ std::unique_ptr<FunctionDefinitionNodeAST> NodeASTParser::parseFunctionDefinitio
             throw ParsingException(currentOffset, "Expected ; or }");
     }
 
-    auto body = std::make_unique<FunctionBodyNodeAST>(FunctionBodyNodeAST(nodes));
-    return std::make_unique<FunctionDefinitionNodeAST>(FunctionDefinitionNodeAST(prototype, body));
+    auto body = std::make_unique<FunctionBodyNodeAST>(FunctionBodyNodeAST(nodes, bodySourceLocation));
+    return std::make_unique<FunctionDefinitionNodeAST>(FunctionDefinitionNodeAST(prototype, body, definitionSourceLocation));
 }
 
 std::unique_ptr<FunctionPrototypeNodeAST> NodeASTParser::parseFunctionPrototype() {
+    auto sourceLocation = currentToken.getSourceLocation();
     moveToNextToken(); // Consume 'func'
 
     if (currentToken.type != Token::Type::Identifier)
@@ -176,7 +180,7 @@ std::unique_ptr<FunctionPrototypeNodeAST> NodeASTParser::parseFunctionPrototype(
         if (currentToken.type != Token::Type::Comma)
             throw ParsingException(currentOffset, "Expected , or )");
     }
-    return std::make_unique<FunctionPrototypeNodeAST>(FunctionPrototypeNodeAST(name, arguments));
+    return std::make_unique<FunctionPrototypeNodeAST>(FunctionPrototypeNodeAST(name, arguments, sourceLocation));
 }
 
 bool NodeASTParser::moveToNextIf(const std::function<bool(Token &)> &predicate) {

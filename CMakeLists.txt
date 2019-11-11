@@ -44,6 +44,6 @@ add_executable(
         Lexer/Lexer.cpp
         Lexer/Lexer.h
         Lexer/OperatorDefinition.h
-        BuiltinTypes.h)
+        BuiltinTypes.h Utilities/SourceLocation.h)
 
 target_link_libraries(kek_lang LLVM)

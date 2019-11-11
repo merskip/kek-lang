@@ -8,6 +8,7 @@
 #include <ostream>
 #include <optional>
 #include "OperatorDefinition.h"
+#include "../Utilities/SourceLocation.h"
 
 struct Token {
     std::string text;
@@ -36,6 +37,14 @@ struct Token {
         if (token.type == Type::Number)
             os << ", numberValue: " << token.numberValue;
         return os;
+    }
+
+    [[nodiscard]] inline long getEndOffset() const {
+        return offset + (long)text.size();
+    }
+
+    [[nodiscard]] inline SourceLocation getSourceLocation() const {
+        return SourceLocation(offset, getEndOffset());
     }
 
     inline static std::string toString(Type type) {

@@ -12,7 +12,7 @@ struct NumberNodeAST : public NodeAST {
 
     double number;
 
-    NumberNodeAST(double number) : number(number) {}
+    NumberNodeAST(double number, SourceLocation location) : number(number), NodeAST(location) {}
 
     void accept(NodeASTVisitor *visitor) const override {
         visitor->visitNumberNode(this);

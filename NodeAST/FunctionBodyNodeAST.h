@@ -13,8 +13,8 @@ struct FunctionBodyNodeAST : public NodeAST {
 
     std::vector<std::unique_ptr<NodeAST>> nodes;
 
-    FunctionBodyNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes)
-            : nodes(std::move(nodes)) {}
+    FunctionBodyNodeAST(std::vector<std::unique_ptr<NodeAST>> &nodes, SourceLocation location)
+            : nodes(std::move(nodes)), NodeAST(location) {}
 
     void accept(NodeASTVisitor *visitor) const override {
         visitor->visitFunctionBodyNode(this);

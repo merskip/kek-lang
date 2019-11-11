@@ -17,8 +17,9 @@ struct FunctionDefinitionNodeAST: public NodeAST {
     std::unique_ptr<FunctionBodyNodeAST> body;
 
     FunctionDefinitionNodeAST(std::unique_ptr<FunctionPrototypeNodeAST> &prototype,
-                              std::unique_ptr<FunctionBodyNodeAST> &body)
-            : prototype(std::move(prototype)), body(std::move(body)) {}
+                              std::unique_ptr<FunctionBodyNodeAST> &body,
+                              SourceLocation location)
+            : prototype(std::move(prototype)), body(std::move(body)), NodeAST(location) {}
 
     void accept(NodeASTVisitor *visitor) const override {
         visitor->visitFunctionDefinitionNode(this);

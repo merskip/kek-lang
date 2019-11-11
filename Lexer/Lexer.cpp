@@ -81,7 +81,7 @@ Token Lexer::getNextToken() {
     if (operatorDefinition.has_value()) {
         return createTokenOperator(currentCharStr, *operatorDefinition);
     } else {
-        throw ParsingException(currentOffset, "Unexpected " + std::string(1, currentChar));
+        throw ParsingException(currentOffset, "Unexpected \"" + currentCharStr + "\"");
     }
 }
 

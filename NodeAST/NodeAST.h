@@ -7,8 +7,15 @@
 #include <ostream>
 #include "../Utilities/NodeASTVisitor.h"
 #include "../Utilities/NodeASTValueVisitor.h"
+#include "../Utilities/SourceLocation.h"
 
 struct NodeAST {
+
+    SourceLocation sourceLocation;
+
+    NodeAST(const SourceLocation &sourceLocation)
+            : sourceLocation(sourceLocation) {
+    }
 
     virtual void accept(NodeASTVisitor *visitor) const = 0;
 

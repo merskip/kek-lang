@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "Lexer/Lexer.h"
 #include "Utilities/ParsingException.h"
 #include "Utilities/Console.h"
@@ -11,8 +12,11 @@
 #include "Compiler/BackendCompiler.h"
 
 void parse(const std::string &text, Console *console, const std::optional<std::string> &filename);
+
 void compileFile(const std::string &filename);
+
 void runConsole();
+
 std::string replaceExtension(const std::string &filename, const std::string &newExtension);
 
 int main(int argc, char *argv[]) {
@@ -34,7 +38,18 @@ void compileFile(const std::string &filename) {
     std::string fileContent = fileStream.str();
 
     std::string outputFilename = replaceExtension(filename, "o");
-    parse(fileContent, nullptr, outputFilename);
+    try {
+        parse(fileContent, nullptr, outputFilename);
+    }
+    catch (ParsingException &e) {
+        auto location = e.getSourceLocation();
+
+        std::cout << fileContent.substr(location.startOffset - 4, 4);
+        std::cout << "[\x1B[31m" + fileContent.substr(location.startOffset, location.getLength()) + "\033[0m]";
+        std::cout << fileContent.substr(location.endOffset, 4);
+        std::cout << std::endl;
+        std::cout << "Error: " << e.getMessage() << std::endl;
+    }
 }
 
 void runConsole() {
@@ -44,7 +59,8 @@ void runConsole() {
             parse(inputText, &console, std::nullopt);
         }
         catch (ParsingException &e) {
-            console.printMarker(e.getOffset());
+            auto location = e.getSourceLocation();
+            console.printMarker(location.startOffset, location.getLength());
             Console::printMessage("Error: " + e.getMessage());
         }
     });

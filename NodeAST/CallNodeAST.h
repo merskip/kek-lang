@@ -16,8 +16,8 @@ struct CallNodeAST : public NodeAST {
     std::string callee;
     std::vector<std::unique_ptr<NodeAST>> arguments;
 
-    CallNodeAST(std::string &callee, std::vector<std::unique_ptr<NodeAST>> &arguments)
-            : callee(callee), arguments(std::move(arguments)) {}
+    CallNodeAST(std::string &callee, std::vector<std::unique_ptr<NodeAST>> &arguments, SourceLocation location)
+            : callee(callee), arguments(std::move(arguments)), NodeAST(location) {}
 
     void accept(NodeASTVisitor *visitor) const override {
         visitor->visitCallNode(this);
