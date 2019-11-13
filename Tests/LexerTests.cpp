@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "../Lexer/Lexer.h"
+#include "../Source/Lexer/Lexer.h"
 
 TEST(LexerTests, givenOneSymbol_returnsTwoTokens) {
     auto lexer = Lexer("d", {});
