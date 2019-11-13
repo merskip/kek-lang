@@ -4,9 +4,7 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
@@ -21,4 +19,4 @@ jobs:
           cmake .
           make kek_lang_test
       - name: Run tests
-        run: make kek_lang_test
+        run: Tests/kek_lang_test
