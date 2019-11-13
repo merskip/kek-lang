@@ -9,6 +9,7 @@
 #include "Compiler/LLVMCompiler.h"
 #include "BuiltinTypes.h"
 #include "Compiler/BackendCompiler.h"
+#include <llvm/Support/raw_ostream.h>
 
 void parse(const std::string &text, Console *console, const std::optional<std::string> &filename);
 void compileFile(const std::string &filename);

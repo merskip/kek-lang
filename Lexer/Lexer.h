@@ -14,13 +14,13 @@
 class Lexer {
 
 private:
-    const std::string &text;
+    std::string text;
     long currentOffset = -1;
     const std::vector<OperatorDefinition> &operators;
 
 public:
-    explicit Lexer(const std::string &text, const std::vector<OperatorDefinition> &operators)
-            : text(text), operators(operators) {
+    explicit Lexer(std::string text, const std::vector<OperatorDefinition> &operators)
+            : text(std::move(text)), operators(operators) {
     }
 
     std::list<Token> getTokens();

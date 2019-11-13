@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="kek_lang" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" PROGRAM_PARAMS="-dump-tokens -dump-llvm-ir -i test.kek" PASS_PARENT_ENVS_2="true" PROJECT_NAME="kek_lang" TARGET_NAME="kek_lang" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="kek_lang" RUN_TARGET_NAME="kek_lang">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>

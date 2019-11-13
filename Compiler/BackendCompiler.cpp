@@ -7,10 +7,10 @@
 #include <llvm/Support/TargetRegistry.h>
 #include <llvm/IR/Verifier.h>
 #include <llvm/Target/TargetOptions.h>
-#include <llvm/Target/TargetMachine.h>
 #include <llvm/IR/LegacyPassManager.h>
 #include <llvm/Support/ToolOutputFile.h>
 #include <llvm/Support/FileSystem.h>
+#include <llvm/Target/TargetMachine.h>
 #include "BackendCompiler.h"
 
 void BackendCompiler::run(llvm::Module *module, const std::string &outputFilename) {
@@ -31,13 +31,13 @@ void BackendCompiler::run(llvm::Module *module, const std::string &outputFilenam
     module->setDataLayout(targetMachine->createDataLayout());
 
     std::error_code errFile;
-    std::unique_ptr<llvm::ToolOutputFile> outputFile = std::make_unique<llvm::ToolOutputFile>(outputFilename, errFile, llvm::sys::fs::OF_Text);
-    auto outputStream = &outputFile->os();
+    std::unique_ptr<llvm::ToolOutputFile> outputFile = std::make_unique<llvm::ToolOutputFile>(outputFilename, errFile, llvm::sys::fs::F_Text);
+    llvm::raw_pwrite_stream &outputStream = outputFile->os();
 
     llvm::legacy::PassManager pass;
-    targetMachine->addPassesToEmitFile(pass, *outputStream, nullptr, llvm::TargetMachine::CGFT_ObjectFile);
+    targetMachine->addPassesToEmitFile(pass, outputStream, llvm::TargetMachine::CGFT_ObjectFile, true, nullptr);
     pass.run(*module);
-    outputStream->flush();
+    outputStream.flush();
     outputFile->keep();
 }
 

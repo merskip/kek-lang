@@ -9,9 +9,7 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
-add_executable(
-        kek_lang
-        main.cpp
+add_library(kek_lang_lib STATIC
         NodeAST/all.h
         NodeAST/NodeAST.h
         NodeAST/NumberNodeAST.h
@@ -44,6 +42,16 @@ add_executable(
         Lexer/Lexer.cpp
         Lexer/Lexer.h
         Lexer/OperatorDefinition.h
-        BuiltinTypes.h)
+        BuiltinTypes.h
+        )
+target_link_libraries(kek_lang_lib LLVM)
 
-target_link_libraries(kek_lang LLVM)
+add_executable(kek_lang main.cpp)
+target_link_libraries(kek_lang kek_lang_lib)
+
+enable_testing()
+find_package(GTest REQUIRED)
+
+add_executable(kek_lang_test Tests/LexerTests.cpp)
+target_link_libraries(kek_lang_test GTest::GTest GTest::Main)
+target_link_libraries(kek_lang_test kek_lang_lib)

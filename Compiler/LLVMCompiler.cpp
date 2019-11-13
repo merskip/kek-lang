@@ -6,7 +6,6 @@
 #include "../NodeAST/all.h"
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Target/TargetMachine.h>
-#include <llvm/CodeGen/CommandFlags.inc>
 #include <llvm/Support/FileSystem.h>
 #include <llvm/IR/Verifier.h>
 #include "llvm/CodeGen/MachineBasicBlock.h"
@@ -110,8 +109,8 @@ llvm::Value *LLVMCompiler::visitForValueFunctionDefinitionNode(const FunctionDef
         returnValue = node->body->acceptForValue(this);
     });
     if (function->getName() == "_start") {
-        FunctionType *syscallType = FunctionType::get(Type::getVoidTy(context), false);
-        InlineAsm *syscallAsm = llvm::InlineAsm::get(syscallType, "mov $$0, %rdi;mov $$60, %rax;syscall", "~{rdi},~{rax}", true);
+        llvm::FunctionType *syscallType = llvm::FunctionType::get(llvm::Type::getVoidTy(context), false);
+        llvm::InlineAsm *syscallAsm = llvm::InlineAsm::get(syscallType, "mov $$0, %rdi;mov $$60, %rax;syscall", "~{rdi},~{rax}", true);
         builder.CreateCall(syscallAsm);
         builder.CreateUnreachable();
     }
