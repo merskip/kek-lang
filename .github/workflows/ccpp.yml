@@ -1,0 +1,24 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          sudo apt install libgtest-dev
+          sudo apt install llvm-6.0-dev
+          mkdir gtest && cd gtest
+          cmake /usr/src/gtest && make
+          sudo cp *.a /usr/lib
+      - name: Build test target
+        run: |
+          cmake .
+          make kek_lang_test
+      - name: Run tests
+        run: make test
