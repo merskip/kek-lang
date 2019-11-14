@@ -4,13 +4,16 @@
 
 #include <gtest/gtest.h>
 #include "Lexer/Lexer.h"
+#include "TestUtils.h"
 
 TEST(LexerTests, givenOneSymbol_returnsTwoTokens) {
     auto lexer = Lexer("d", {});
 
     auto tokens = lexer.getTokens();
 
-    EXPECT_EQ(tokens.size(), 2);
+    EXPECT_TRUE(checkTokens(tokens, {
+            Token::Type::Identifier, Token::Type::Eof
+    }));
 }
 
 TEST(LexerTests, givenTwoSymbol_returnsThreeToken) {
@@ -18,5 +21,7 @@ TEST(LexerTests, givenTwoSymbol_returnsThreeToken) {
 
     auto tokens = lexer.getTokens();
 
-    EXPECT_EQ(tokens.size(), 3);
+    EXPECT_TRUE(checkTokens(tokens, {
+            Token::Type::Identifier, Token::Type::Number, Token::Type::Eof
+    }));
 }
