@@ -16,5 +16,14 @@ struct OperatorDefinition {
     OperatorDefinition(std::string symbol, int precedence)
             : symbol(std::move(symbol)), precedence(precedence) {
     }
+
+    bool operator==(const OperatorDefinition &rhs) const {
+        return symbol == rhs.symbol &&
+               precedence == rhs.precedence;
+    }
+
+    bool operator!=(const OperatorDefinition &rhs) const {
+        return !(rhs == *this);
+    }
 };
 

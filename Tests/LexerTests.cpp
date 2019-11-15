@@ -3,6 +3,8 @@
 //
 
 #include <gtest/gtest.h>
+#include <BuiltinTypes.h>
+#include <Utilities/ParsingException.h>
 #include "Lexer/Lexer.h"
 #include "TestUtils.h"
 
@@ -16,12 +18,55 @@ TEST(LexerTests, givenOneSymbol_returnsTwoTokens) {
     }));
 }
 
-TEST(LexerTests, givenTwoSymbol_returnsThreeToken) {
-    auto lexer = Lexer("d 2", {});
+TEST(LexerTests, givenAllKnownSymbols_returnsAllKnownSymbols) {
+    auto lexer = Lexer("func abc 10 + ( ) { } , ;", builtin::operators);
 
     auto tokens = lexer.getTokens();
 
     EXPECT_TRUE(checkTokens(tokens, {
-            Token::Type::Identifier, Token::Type::Number, Token::Type::Eof
+            Token::Type::Func,
+            Token::Type::Identifier,
+            Token::Type::Number,
+            Token::Type::Operator,
+            Token::Type::LeftParenthesis,
+            Token::Type::RightParenthesis,
+            Token::Type::LeftBracket,
+            Token::Type::RightBracket,
+            Token::Type::Comma,
+            Token::Type::Semicolon,
+            Token::Type::Eof,
     }));
+}
+
+TEST(LexerTests, givenDecimalNumber_returnsSingleToken) {
+    auto lexer = Lexer("1.23", builtin::operators);
+
+    auto tokens = lexer.getTokens();
+
+    EXPECT_TRUE(checkTokens(tokens, {
+            Token::Type::Number,
+            Token::Type::Eof,
+    }));
+
+    EXPECT_EQ(tokens.front().numberValue, 1.23);
+}
+
+TEST(LexerTests, givenKnownOperator_returnsOperator) {
+    auto operatorDefinition = OperatorDefinition("+", 100);
+    auto lexer = Lexer("+", {operatorDefinition});
+
+    auto tokens = lexer.getTokens();
+
+    EXPECT_TRUE(checkTokens(tokens, {
+            Token::Type::Operator,
+            Token::Type::Eof,
+    }));
+
+    EXPECT_EQ(tokens.front().operatorDefinition, operatorDefinition);
+}
+
+TEST(LexerTests, givenUnknownToken_throwsException) {
+    auto lexer = Lexer("%", {});
+
+    EXPECT_THROW(lexer.getTokens(), ParsingException);
 }
