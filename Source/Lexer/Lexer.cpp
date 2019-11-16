@@ -47,7 +47,7 @@ Token Lexer::getNextToken() {
             numberText += currentChar;
             if (currentChar == '.') {
                 if (visitedSeparator)
-                    throw std::invalid_argument("Unexpected " + std::string(1, currentChar));
+                    throw ParsingException(currentOffset, "Unexpected " + std::string(1, currentChar));
                 visitedSeparator = true;
             }
 

@@ -70,3 +70,34 @@ TEST(LexerTests, givenUnknownToken_throwsException) {
 
     EXPECT_THROW(lexer.getTokens(), ParsingException);
 }
+
+TEST(LexerTests, givenNumberWithTwoDots_throwsException) {
+    auto lexer = Lexer("12.3.4", {});
+
+    EXPECT_THROW(lexer.getTokens(), ParsingException);
+}
+
+TEST(LexerTests, givenTextWithComment_returnsTokenUntilComment) {
+    auto lexer = Lexer("a # b", {});
+
+    auto tokens = lexer.getTokens();
+
+    EXPECT_TRUE(checkTokens(tokens, {
+            Token::Type::Identifier,
+            Token::Type::Eof,
+    }));
+}
+
+TEST(LexerTests, tokenToString_returnsName) {
+    EXPECT_EQ(Token::toString(Token::Type::Eof), "Eof");
+    EXPECT_EQ(Token::toString(Token::Type::Func), "Func");
+    EXPECT_EQ(Token::toString(Token::Type::Identifier), "Identifier");
+    EXPECT_EQ(Token::toString(Token::Type::Number), "Number");
+    EXPECT_EQ(Token::toString(Token::Type::Operator), "Operator");
+    EXPECT_EQ(Token::toString(Token::Type::LeftParenthesis), "LeftParenthesis");
+    EXPECT_EQ(Token::toString(Token::Type::RightParenthesis), "RightParenthesis");
+    EXPECT_EQ(Token::toString(Token::Type::LeftBracket), "LeftBracket");
+    EXPECT_EQ(Token::toString(Token::Type::RightBracket), "RightBracket");
+    EXPECT_EQ(Token::toString(Token::Type::Comma), "Comma");
+    EXPECT_EQ(Token::toString(Token::Type::Semicolon), "Semicolon");
+}

@@ -23,7 +23,7 @@ struct Token {
         LeftBracket,
         RightBracket,
         Comma,
-        Semicolon
+        Semicolon,
     } type;
     double numberValue;
     std::optional<OperatorDefinition> operatorDefinition;
