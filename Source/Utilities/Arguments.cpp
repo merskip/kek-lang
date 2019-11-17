@@ -20,7 +20,7 @@ std::optional<std::string> Arguments::getOption(const std::string &option) {
     if (optionIter == args.end())
         return std::nullopt;
     auto valueIter = std::next(optionIter);
-    if (optionIter == args.end())
+    if (valueIter == args.end())
         return std::nullopt;
     return *valueIter;
 }

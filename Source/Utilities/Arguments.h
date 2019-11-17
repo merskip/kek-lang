@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include <list>
+#include <vector>
 #include <string>
 #include <algorithm>
 #include <optional>
@@ -13,7 +13,7 @@
 class Arguments {
 
 private:
-    std::list<std::string> args;
+    std::vector<std::string> args;
 
 public:
     void initialize(int argc, char *argv[]);

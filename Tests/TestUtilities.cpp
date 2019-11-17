@@ -1,12 +1,8 @@
 //
-// Created by Piotr Merski on 14.11.2019.
+// Created by Piotr Merski on 17.11.2019.
 //
 
-#pragma once
-
-#include <gtest/gtest.h>
-#include <list>
-#include <Lexer/Token.h>
+#include "TestUtilities.h"
 
 ::testing::AssertionResult checkTokens(std::list<Token> &tokens, std::vector<Token::Type> expectedTypes) {
     if (tokens.size() != expectedTypes.size())

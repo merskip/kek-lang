@@ -3,8 +3,11 @@ project(kek-lang)
 find_package(GTest REQUIRED)
 
 add_executable(kek_lang_test
+        TestUtilities.h
+        TestUtilities.cpp
         LexerTests.cpp
-        TestUtils.h)
+        ArgumentsTests.cpp
+        )
 
 target_include_directories(kek_lang_test PRIVATE ../Source)
 target_link_libraries(kek_lang_test GTest::GTest GTest::Main)

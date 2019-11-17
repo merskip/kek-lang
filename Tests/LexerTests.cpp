@@ -6,7 +6,7 @@
 #include <BuiltinTypes.h>
 #include <Utilities/ParsingException.h>
 #include "Lexer/Lexer.h"
-#include "TestUtils.h"
+#include "TestUtilities.h"
 
 TEST(LexerTests, givenOneSymbol_returnsTwoTokens) {
     auto lexer = Lexer("d", {});
